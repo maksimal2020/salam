@@ -60,7 +60,8 @@ class _AdScreenState extends State<AdScreen> {
         _contact.clear();
       });
     } on ApiError catch (e) {
-      if (mounted) setState(() {
+      if (!mounted) return;
+      setState(() {
         _error = e;
         _busy = false;
       });
@@ -87,7 +88,8 @@ class _AdScreenState extends State<AdScreen> {
         _busy = false;
       });
     } on ApiError catch (e) {
-      if (mounted) setState(() {
+      if (!mounted) return;
+      setState(() {
         _error = e;
         _busy = false;
       });

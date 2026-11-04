@@ -44,6 +44,8 @@ jobs:
       - run: flutter --version
       # Папки android/ и ios/ в репозитории нет: их создаёт flutter create, не трогая lib/, test/ и pubspec.yaml.
       - run: flutter create --platforms=android,ios --org ru.example --project-name migrant_guide .
+      # flutter create кладёт шаблонный test/widget_test.dart (ссылается на MyApp) — он нашему приложению не нужен.
+      - run: rm -f test/widget_test.dart
       - run: python3 tool/configure_platforms.py
       - run: flutter pub get
       - run: dart run flutter_launcher_icons

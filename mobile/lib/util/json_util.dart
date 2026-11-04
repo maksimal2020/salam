@@ -4,7 +4,7 @@ Map<String, dynamic> asMap(dynamic v) => v is Map ? v.cast<String, dynamic>() : 
 
 List<dynamic> asList(dynamic v) => v is List ? v : const <dynamic>[];
 
-String? asStr(dynamic v) => v == null ? null : v.toString();
+String? asStr(dynamic v) => v?.toString();
 
 String strOr(dynamic v, [String fallback = '']) => v == null ? fallback : v.toString();
 
