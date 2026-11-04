@@ -236,5 +236,12 @@
   "group.visa_free": "Безвизовые страны, не ЕАЭС",
   "group.other": "Другие страны",
   "data.partial": "Частично",
-  "ads.allCities": "Все города"
+  "ads.allCities": "Все города",
+  "where.nearMe": "Рядом со мной",
+  "where.locating": "Определяем ваше местоположение…",
+  "where.nearMeDenied": "Доступ к местоположению не разрешён — показаны учреждения по выбранному городу.",
+  "where.nearMeUnavailable": "Не удалось определить местоположение — показаны учреждения по выбранному городу.",
+  "where.distance": "{km} км",
+  "where.distanceApprox": "≈{km} км (по центру города)",
+  "where.nearMeEmpty": "Рядом ничего не нашлось."
 }

@@ -467,6 +467,14 @@ class LinkText extends StatelessWidget {
   }
 }
 
+/// 0.3 → «0,3», 2.0 → «2», 11.7 → «12» — не больше одного знака после запятой,
+/// и округляем до целого за пределами одного км (дробная точность там не нужна).
+String _fmtKm(double km) {
+  if (km >= 10) return km.round().toString();
+  final r = (km * 10).round() / 10;
+  return r == r.roundToDouble() ? r.toInt().toString() : r.toString().replaceAll('.', ',');
+}
+
 class InstitutionCard extends StatelessWidget {
   const InstitutionCard({super.key, required this.inst});
   final Institution inst;
@@ -504,7 +512,17 @@ class InstitutionCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Badges([Stamp(status: inst.status), Tag(app.t('mode.${inst.mode}'))]),
+          Badges([
+            Stamp(status: inst.status),
+            Tag(app.t('mode.${inst.mode}')),
+            if (inst.distanceKm != null)
+              Tag(
+                // Для approx (нет подтверждённых координат здания — считали от
+                // центра города) честно показываем «≈», а не точную цифру.
+                app.t(inst.distanceApprox ? 'where.distanceApprox' : 'where.distance', {'km': _fmtKm(inst.distanceKm!)}),
+                color: inst.distanceApprox ? Palette.ink3 : Palette.verified,
+              ),
+          ]),
           const SizedBox(height: 14),
           Fact(
             app.t('common.address'),
@@ -692,6 +710,25 @@ class SearchField extends StatelessWidget {
       );
 }
 
+/// Один переключаемый «таблеточный» тумблер (вкл/выкл), например «Рядом со мной».
+/// Тот же визуальный язык и доступность, что у [ChipChoice] — просто на одно значение,
+/// а не на список вариантов.
+class ToggleChip extends StatelessWidget {
+  const ToggleChip({super.key, required this.icon, required this.label, required this.selected, required this.onChanged});
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) => _ChoicePill(
+        label: label,
+        selected: selected,
+        leading: selected ? null : icon,
+        onTap: () => onChanged(!selected),
+      );
+}
+
 /// Горизонтальный ряд выбора (категории, темы, ситуации). Выбранный пункт отмечен цветом, галочкой и состоянием для скринридера.
 class ChipChoice extends StatelessWidget {
   const ChipChoice({super.key, required this.options, required this.value, required this.onChanged});
@@ -715,10 +752,12 @@ class ChipChoice extends StatelessWidget {
 }
 
 class _ChoicePill extends StatelessWidget {
-  const _ChoicePill({required this.label, required this.selected, required this.onTap});
+  const _ChoicePill({required this.label, required this.selected, required this.onTap, this.leading});
   final String label;
   final bool selected;
   final VoidCallback onTap;
+  /// Значок слева, когда пилюля НЕ выбрана (выбранная всегда показывает галочку).
+  final IconData? leading;
 
   @override
   Widget build(BuildContext context) {
@@ -739,7 +778,8 @@ class _ChoicePill extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (selected) ...[const Icon(Icons.check, size: 18, color: Colors.white), const SizedBox(width: 6)],
+                  if (selected) ...[const Icon(Icons.check, size: 18, color: Colors.white), const SizedBox(width: 6)]
+                  else if (leading != null) ...[Icon(leading, size: 18, color: Palette.ink), const SizedBox(width: 6)],
                   Text(label, style: TextStyle(fontSize: 15, fontWeight: selected ? FontWeight.w700 : FontWeight.w600, color: selected ? Colors.white : Palette.ink)),
                 ],
               ),

@@ -196,6 +196,39 @@ test('institutions list supports service and mode filters', async () => {
   assert.equal((await get('/institutions')).json.needs_city, true);
 });
 
+test('institutions/nearby: sorted by distance, flags institutions without confirmed coordinates', async () => {
+  // Координаты в центре Москвы — рядом с fx_fns_cao/fx_fns_sao/fx_online_service (55.75, 37.62).
+  const near = (await get('/institutions/nearby?lat=55.75&lon=37.62&lang=ru')).json;
+  assert.ok(near.institutions.length > 1);
+  for (let k = 1; k < near.institutions.length; k++) {
+    assert.ok(near.institutions[k - 1].distance_km <= near.institutions[k].distance_km, 'отсортировано по расстоянию');
+  }
+  for (const i of near.institutions) {
+    assert.equal(typeof i.distance_km, 'number');
+    assert.equal(typeof i.distance_approx, 'boolean');
+  }
+  // Институт с подтверждёнными координатами (fx_fns_cao, 55.75/37.62) должен оказаться
+  // ближе, чем пришлось бы считать по центру города — и без approx.
+  const cao = near.institutions.find((i: any) => i.id === 'fx_fns_cao');
+  assert.ok(cao);
+  assert.equal(cao.distance_approx, false);
+  assert.ok(cao.distance_km < 1);
+  // Учреждение без подтверждённых координат (mmc_moscow) попадает в список по центру
+  // города и честно помечено approx: true — это не точное расстояние до здания.
+  const mmc = near.institutions.find((i: any) => i.id === 'mmc_moscow');
+  assert.ok(mmc);
+  assert.equal(mmc.distance_approx, true);
+  // Чисто онлайн-канал (mode=online) — не физическое место, в «рядом со мной» не попадает,
+  // даже если у него координаты есть.
+  assert.ok(!near.institutions.some((i: any) => i.id === 'fx_online_service'));
+  assert.ok(!near.institutions.some((i: any) => i.id === 'amina_app'));
+  // Фильтр по услуге сохраняется.
+  const onlyInn = (await get('/institutions/nearby?lat=55.75&lon=37.62&service=inn')).json;
+  assert.ok(onlyInn.institutions.every((i: any) => i.services.some((s: any) => s.id === 'inn')));
+  // Без lat/lon — ошибка валидации, а не пустой список с виду успешного ответа.
+  assert.equal((await get('/institutions/nearby')).status, 400);
+});
+
 // ---------------------------------------------------------------- tips
 test('tips: city filter shows local tips only for the chosen city', async () => {
   const general = (await get('/tips?lang=ru')).json.tips;

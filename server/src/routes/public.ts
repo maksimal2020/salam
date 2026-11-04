@@ -5,6 +5,7 @@ import { config } from '../config.js';
 import { langOf, pick } from '../util.js';
 import { evaluateChecklist, type DocRow } from '../checklist.js';
 import { matchInstitutions, type InstRow } from '../places.js';
+import { haversineKm } from '../geo.js';
 import { searchCities, locate, norm, type CityRow } from '../cities.js';
 import { computeCoverage } from '../coverage.js';
 
@@ -202,6 +203,47 @@ export function publicRoutes(pool: Pool): Router {
       needs_city: false, city: cityOut(places.city), institutions: places.institutions, needs_district: places.needs_district,
       districts: places.city.districts ?? [],
       services: docs.map((d) => ({ id: d.id, title: pick(d.title, lang), official_search: d.official_search })),
+    });
+  });
+
+  // ---- ближайшие учреждения по геопозиции (без привязки к выбранному городу:
+  // рядом с границей города/области ближе может быть учреждение другого города)
+  r.get('/institutions/nearby', async (req, res) => {
+    const lang = langOf(req.query.lang);
+    const lat = Number(req.query.lat);
+    const lon = Number(req.query.lon);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return res.status(400).json({ code: 'validation' });
+    const service = String(req.query.service ?? '') || undefined;
+    const citizenship = String(req.query.citizenship ?? '') || undefined;
+    const cities = await allCities();
+    const cityMap = new Map(cities.map((c) => [c.id, c]));
+    const docs = new Map((await pool.query('select id, title from documents')).rows.map((d) => [d.id, d]));
+    const insts = (await pool.query(`select * from institutions where ${vis()}`)).rows as (InstRow & any)[];
+    const withDistance = insts
+      // «Рядом со мной» — про физические места, куда можно дойти. Чисто онлайн-канал
+      // (например, приложение «Амина») тут не при чём, даже если он привязан к городу.
+      .filter((i) => i.mode !== 'online')
+      .filter((i) => !service || i.services.includes(service))
+      .filter((i) => !citizenship || !i.citizenships || i.citizenships.includes(citizenship))
+      .map((i) => {
+        // Точное расположение учреждения, если оно подтверждено (lat/lon заполнены при проверке
+        // адреса); иначе — только центр его города, это грубее и помечается approx: true.
+        const own = cityMap.get(i.city_id);
+        const approx = i.lat == null || i.lon == null;
+        const plat = approx ? own?.lat : i.lat;
+        const plon = approx ? own?.lon : i.lon;
+        const distanceKm = plat != null && plon != null ? haversineKm(lat, lon, plat, plon) : null;
+        return { i, own, approx, distanceKm };
+      })
+      .filter((x): x is typeof x & { distanceKm: number } => x.distanceKm != null)
+      .sort((a, b) => a.distanceKm - b.distanceKm)
+      .slice(0, 15);
+    res.json({
+      institutions: withDistance.map((x) => ({
+        ...instOut(x.i, lang, x.i.city_id, cityMap, docs),
+        distance_km: Math.round(x.distanceKm * 10) / 10,
+        distance_approx: x.approx,
+      })),
     });
   });
 

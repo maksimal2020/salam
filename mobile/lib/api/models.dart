@@ -249,6 +249,8 @@ class Institution {
     required this.citizenships,
     required this.sources,
     required this.note,
+    this.distanceKm,
+    this.distanceApprox = false,
   });
   final String id;
   final String name;
@@ -268,6 +270,12 @@ class Institution {
   final List<String>? citizenships;
   final List<SourceLink> sources;
   final String? note;
+  /// Заполняется только ответом /institutions/nearby — расстояние от текущей
+  /// геопозиции пользователя в км, округлённое до десятых.
+  final double? distanceKm;
+  /// true, если расстояние считалось до центра города учреждения (нет
+  /// подтверждённых координат самого здания) — т.е. ориентировочное.
+  final bool distanceApprox;
 
   factory Institution.fromJson(dynamic j) {
     final m = asMap(j);
@@ -294,7 +302,20 @@ class Institution {
       citizenships: m['citizenships'] == null ? null : strList(m['citizenships']),
       sources: _sources(m['sources']),
       note: asStr(m['note']),
+      distanceKm: asDouble(m['distance_km']),
+      distanceApprox: asBool(m['distance_approx']),
     );
+  }
+}
+
+/// Ответ GET /institutions/nearby — плоский список, отсортированный по расстоянию.
+class NearbyInstitutions {
+  const NearbyInstitutions(this.institutions);
+  final List<Institution> institutions;
+
+  factory NearbyInstitutions.fromJson(dynamic j) {
+    final m = asMap(j);
+    return NearbyInstitutions(asList(m['institutions']).map(Institution.fromJson).toList());
   }
 }
 

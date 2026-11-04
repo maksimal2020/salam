@@ -236,5 +236,12 @@
   "group.visa_free": "Vizasiz davlatlar, YeOIIga kirmaydi",
   "group.other": "Boshqa davlatlar",
   "data.partial": "Qisman",
-  "ads.allCities": "Barcha shaharlar"
+  "ads.allCities": "Barcha shaharlar",
+  "where.nearMe": "Yaqinimdagilar",
+  "where.locating": "Joylashuvingiz aniqlanmoqda…",
+  "where.nearMeDenied": "Joylashuvga ruxsat berilmadi — tanlangan shahar boʻyicha muassasalar koʻrsatildi.",
+  "where.nearMeUnavailable": "Joylashuvni aniqlab boʻlmadi — tanlangan shahar boʻyicha muassasalar koʻrsatildi.",
+  "where.distance": "{km} km",
+  "where.distanceApprox": "≈{km} km (shahar markazidan)",
+  "where.nearMeEmpty": "Yaqin-atrofda hech narsa topilmadi."
 }
