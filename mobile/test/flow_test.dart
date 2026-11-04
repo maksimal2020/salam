@@ -14,7 +14,7 @@ Future<void> start(WidgetTester tester, AppState state) async {
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
   await tester.pumpWidget(MigrantGuideApp(state: state));
-  await tester.pumpAndSettle();
+  await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
 }
 
 Future<void> stop(WidgetTester tester) async {
@@ -26,29 +26,29 @@ Future<void> stop(WidgetTester tester) async {
 Future<void> typeCity(WidgetTester tester, String text) async {
   await tester.enterText(find.byKey(const ValueKey('city-search')), text);
   await tester.pump(const Duration(milliseconds: 400)); // ждём задержку поиска
-  await tester.pumpAndSettle();
+  await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
 }
 
 /// Первый запуск до главного экрана: язык, затем ручной выбор города.
 Future<void> onboardManual(WidgetTester tester, AppState state, String query, String cityKey) async {
   await start(tester, state);
   await tester.tap(find.byKey(const ValueKey('lang-ru')));
-  await tester.pumpAndSettle();
+  await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
   await tester.tap(find.byKey(const ValueKey('city-manual')));
-  await tester.pumpAndSettle();
+  await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
   await typeCity(tester, query);
   await tester.tap(find.byKey(ValueKey(cityKey)));
-  await tester.pumpAndSettle();
+  await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
 }
 
 Future<void> openWhere(WidgetTester tester) async {
   final doc = find.byKey(const ValueKey('doc-passport_valid'));
   await tester.ensureVisible(doc);
-  await tester.pumpAndSettle();
+  await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
   await tester.tap(doc);
-  await tester.pumpAndSettle();
+  await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
   await tester.tap(find.byKey(const ValueKey('where-button')));
-  await tester.pumpAndSettle();
+  await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
 }
 
 void main() {
@@ -65,7 +65,7 @@ void main() {
     final state = await makeState();
     await start(tester, state);
     await tester.tap(find.byKey(const ValueKey('lang-ru')));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
     expect(find.byKey(const ValueKey('city-detect')), findsOneWidget);
     expect(find.byKey(const ValueKey('city-manual')), findsOneWidget);
     expect(find.byKey(const ValueKey('city-skip')), findsOneWidget);
@@ -77,9 +77,9 @@ void main() {
     final state = await makeState(location: loc);
     await start(tester, state);
     await tester.tap(find.byKey(const ValueKey('lang-ru')));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
     await tester.tap(find.byKey(const ValueKey('city-detect')));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
     expect(loc.calls, 1);
     expect(find.text(state.t('city.denied')), findsOneWidget);
     expect(find.byKey(const ValueKey('city-search')), findsOneWidget);
@@ -92,13 +92,13 @@ void main() {
     final state = await makeState(location: loc);
     await start(tester, state);
     await tester.tap(find.byKey(const ValueKey('lang-ru')));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
     await tester.tap(find.byKey(const ValueKey('city-detect')));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
     expect(find.text(state.t('city.found', {'city': 'Москва, г. Москва'})), findsOneWidget);
     expect(state.city, isNull, reason: 'до подтверждения город не сохраняется');
     await tester.tap(find.byKey(const ValueKey('city-confirm')));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
     expect(state.city?.id, 'moscow');
     expect(find.text('Москва, г. Москва'), findsWidgets);
     final stored = state.prefs.getKeys().map((k) => '${state.prefs.get(k)}').join('\n');
@@ -138,7 +138,7 @@ void main() {
 
     // Тестовый сервер знает для Химок учреждение, которое находится в Москве.
     state.setCity(const City(id: 'khimki', name: 'Химки', region: 'Московская область'));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
     expect(find.text('Центр в Москве'), findsOneWidget);
     expect(find.textContaining('ул. Тестовая, 1, Москва'), findsWidgets, reason: 'фактический адрес и пояснение про обслуживание Химок');
     await stop(tester);
@@ -155,7 +155,7 @@ void main() {
     expect(find.text(state.t('city.districtTitle')), findsWidgets);
     expect(find.text('Подразделение ЦАО'), findsNothing);
     state.setDistrict('cao');
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
     expect(find.text('Подразделение ЦАО'), findsOneWidget);
     await stop(tester);
   });
