@@ -1,0 +1,10 @@
+node_modules
+dist
+.env
+*.log
+.dart_tool/
+mobile/build/
+# android/ и ios/ создаются командой flutter create (см. mobile/README.md и .github/workflows/ci.yml)
+mobile/android/
+mobile/ios/
+mobile/pubspec.lock

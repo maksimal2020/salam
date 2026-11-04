@@ -1,0 +1,282 @@
+[
+  {
+    "id": "mmc_moscow",
+    "name": {
+      "ru": "Многофункциональный миграционный центр (Москва)"
+    },
+    "city_id": "moscow",
+    "services": [
+      "patent",
+      "russian_exam",
+      "medical_exam",
+      "migration_registration"
+    ],
+    "mode": "in_person",
+    "address": null,
+    "map_query": "Многофункциональный миграционный центр Москва",
+    "lat": null,
+    "lon": null,
+    "hours": null,
+    "phone": null,
+    "site": null,
+    "booking_url": null,
+    "serves": [
+      {
+        "city": "moscow",
+        "districts": null
+      }
+    ],
+    "citizenships": null,
+    "status": "demo",
+    "checked_at": null,
+    "sources": [],
+    "note": "Демо-запись: адрес, часы работы и перечень услуг не подтверждены по официальному источнику."
+  },
+  {
+    "id": "mfc_moscow",
+    "name": {
+      "ru": "Центры госуслуг «Мои документы» (Москва)"
+    },
+    "city_id": "moscow",
+    "services": [
+      "migration_registration",
+      "snils",
+      "inn"
+    ],
+    "mode": "both",
+    "address": null,
+    "map_query": "МФЦ Мои документы Москва",
+    "lat": null,
+    "lon": null,
+    "hours": null,
+    "phone": null,
+    "site": null,
+    "booking_url": null,
+    "serves": [
+      {
+        "city": "moscow",
+        "districts": null
+      }
+    ],
+    "citizenships": null,
+    "status": "demo",
+    "checked_at": null,
+    "sources": [],
+    "note": "Демо-запись: какие услуги для иностранцев оказывает конкретный центр, нужно подтвердить."
+  },
+  {
+    "id": "fns_moscow",
+    "name": {
+      "ru": "Налоговая инспекция (Москва)"
+    },
+    "city_id": "moscow",
+    "services": [
+      "inn"
+    ],
+    "mode": "both",
+    "address": null,
+    "map_query": "Межрайонная инспекция ФНС Москва",
+    "lat": null,
+    "lon": null,
+    "hours": null,
+    "phone": null,
+    "site": null,
+    "booking_url": null,
+    "serves": [
+      {
+        "city": "moscow",
+        "districts": null
+      }
+    ],
+    "citizenships": null,
+    "status": "demo",
+    "checked_at": null,
+    "sources": [],
+    "note": "Демо-запись: инспекции в Москве закреплены за территориями — нужно загрузить подтверждённый список по районам."
+  },
+  {
+    "id": "sfr_moscow",
+    "name": {
+      "ru": "Социальный фонд России, клиентская служба (Москва)"
+    },
+    "city_id": "moscow",
+    "services": [
+      "snils"
+    ],
+    "mode": "both",
+    "address": null,
+    "map_query": "Социальный фонд России клиентская служба Москва",
+    "lat": null,
+    "lon": null,
+    "hours": null,
+    "phone": null,
+    "site": null,
+    "booking_url": null,
+    "serves": [
+      {
+        "city": "moscow",
+        "districts": null
+      }
+    ],
+    "citizenships": null,
+    "status": "demo",
+    "checked_at": null,
+    "sources": [],
+    "note": "Демо-запись: адреса клиентских служб нужно подтвердить."
+  },
+  {
+    "id": "mvd_migration_moscow",
+    "name": {
+      "ru": "Подразделение по вопросам миграции МВД (Москва)"
+    },
+    "city_id": "moscow",
+    "services": [
+      "lost_migration_docs",
+      "migration_registration"
+    ],
+    "mode": "in_person",
+    "address": null,
+    "map_query": "Управление по вопросам миграции ГУ МВД Москва",
+    "lat": null,
+    "lon": null,
+    "hours": null,
+    "phone": null,
+    "site": null,
+    "booking_url": null,
+    "serves": [
+      {
+        "city": "moscow",
+        "districts": null
+      }
+    ],
+    "citizenships": null,
+    "status": "demo",
+    "checked_at": null,
+    "sources": [],
+    "note": "Демо-запись: подразделение, адрес и приём нужно подтвердить."
+  },
+  {
+    "id": "emb_tj",
+    "name": {
+      "ru": "Посольство Республики Таджикистан в Российской Федерации"
+    },
+    "city_id": "moscow",
+    "services": [
+      "lost_passport"
+    ],
+    "mode": "in_person",
+    "address": null,
+    "map_query": "Посольство Таджикистана в Москве",
+    "lat": null,
+    "lon": null,
+    "hours": null,
+    "phone": null,
+    "site": null,
+    "booking_url": null,
+    "serves": [
+      {
+        "scope": "country"
+      }
+    ],
+    "citizenships": [
+      "TJ"
+    ],
+    "status": "demo",
+    "checked_at": null,
+    "sources": [],
+    "note": "Демо-запись: адрес и график консульского приёма нужно подтвердить."
+  },
+  {
+    "id": "emb_uz",
+    "name": {
+      "ru": "Посольство Республики Узбекистан в Российской Федерации"
+    },
+    "city_id": "moscow",
+    "services": [
+      "lost_passport"
+    ],
+    "mode": "in_person",
+    "address": null,
+    "map_query": "Посольство Узбекистана в Москве",
+    "lat": null,
+    "lon": null,
+    "hours": null,
+    "phone": null,
+    "site": null,
+    "booking_url": null,
+    "serves": [
+      {
+        "scope": "country"
+      }
+    ],
+    "citizenships": [
+      "UZ"
+    ],
+    "status": "demo",
+    "checked_at": null,
+    "sources": [],
+    "note": "Демо-запись: адрес и график консульского приёма нужно подтвердить."
+  },
+  {
+    "id": "emb_kg",
+    "name": {
+      "ru": "Посольство Кыргызской Республики в Российской Федерации"
+    },
+    "city_id": "moscow",
+    "services": [
+      "lost_passport"
+    ],
+    "mode": "in_person",
+    "address": null,
+    "map_query": "Посольство Кыргызстана в Москве",
+    "lat": null,
+    "lon": null,
+    "hours": null,
+    "phone": null,
+    "site": null,
+    "booking_url": null,
+    "serves": [
+      {
+        "scope": "country"
+      }
+    ],
+    "citizenships": [
+      "KG"
+    ],
+    "status": "demo",
+    "checked_at": null,
+    "sources": [],
+    "note": "Демо-запись: адрес и график консульского приёма нужно подтвердить."
+  },
+  {
+    "id": "emb_kz",
+    "name": {
+      "ru": "Посольство Республики Казахстан в Российской Федерации"
+    },
+    "city_id": "moscow",
+    "services": [
+      "lost_passport"
+    ],
+    "mode": "in_person",
+    "address": null,
+    "map_query": "Посольство Казахстана в Москве",
+    "lat": null,
+    "lon": null,
+    "hours": null,
+    "phone": null,
+    "site": null,
+    "booking_url": null,
+    "serves": [
+      {
+        "scope": "country"
+      }
+    ],
+    "citizenships": [
+      "KZ"
+    ],
+    "status": "demo",
+    "checked_at": null,
+    "sources": [],
+    "note": "Демо-запись: адрес и график консульского приёма нужно подтвердить."
+  }
+]

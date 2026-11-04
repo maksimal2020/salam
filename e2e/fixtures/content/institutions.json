@@ -1,0 +1,147 @@
+[
+  {
+    "id": "fx_center_for_khimki",
+    "name": {
+      "ru": "ТЕСТОВЫЙ центр (находится в Москве, обслуживает Химки)"
+    },
+    "city_id": "moscow",
+    "services": [
+      "inn"
+    ],
+    "mode": "in_person",
+    "address": "ТЕСТОВАЯ улица, 1, Москва",
+    "map_query": null,
+    "lat": 55.75,
+    "lon": 37.62,
+    "hours": "Пн–Пт 09:00–18:00",
+    "phone": "+7 000 000-00-00",
+    "site": "https://example.test/",
+    "booking_url": "https://example.test/booking",
+    "serves": [
+      {
+        "city": "khimki",
+        "districts": null
+      }
+    ],
+    "citizenships": null,
+    "status": "verified",
+    "checked_at": "2026-11-01",
+    "sources": [
+      {
+        "title": "ТЕСТОВЫЙ источник (вымышленный, только для автотестов)",
+        "url": "https://example.test/source"
+      }
+    ],
+    "note": null
+  },
+  {
+    "id": "fx_fns_cao",
+    "name": {
+      "ru": "ТЕСТОВАЯ инспекция для ЦАО"
+    },
+    "city_id": "moscow",
+    "services": [
+      "inn"
+    ],
+    "mode": "in_person",
+    "address": "ТЕСТОВАЯ улица, 2, Москва",
+    "map_query": null,
+    "lat": 55.75,
+    "lon": 37.62,
+    "hours": "Пн–Пт 09:00–18:00",
+    "phone": "+7 000 000-00-00",
+    "site": "https://example.test/",
+    "booking_url": "https://example.test/booking",
+    "serves": [
+      {
+        "city": "moscow",
+        "districts": [
+          "cao"
+        ]
+      }
+    ],
+    "citizenships": null,
+    "status": "verified",
+    "checked_at": "2026-11-01",
+    "sources": [
+      {
+        "title": "ТЕСТОВЫЙ источник (вымышленный, только для автотестов)",
+        "url": "https://example.test/source"
+      }
+    ],
+    "note": null
+  },
+  {
+    "id": "fx_fns_sao",
+    "name": {
+      "ru": "ТЕСТОВАЯ инспекция для САО и СВАО"
+    },
+    "city_id": "moscow",
+    "services": [
+      "inn"
+    ],
+    "mode": "in_person",
+    "address": "ТЕСТОВАЯ улица, 3, Москва",
+    "map_query": null,
+    "lat": 55.75,
+    "lon": 37.62,
+    "hours": "Пн–Пт 09:00–18:00",
+    "phone": "+7 000 000-00-00",
+    "site": "https://example.test/",
+    "booking_url": "https://example.test/booking",
+    "serves": [
+      {
+        "city": "moscow",
+        "districts": [
+          "sao",
+          "svao"
+        ]
+      }
+    ],
+    "citizenships": null,
+    "status": "verified",
+    "checked_at": "2026-11-01",
+    "sources": [
+      {
+        "title": "ТЕСТОВЫЙ источник (вымышленный, только для автотестов)",
+        "url": "https://example.test/source"
+      }
+    ],
+    "note": null
+  },
+  {
+    "id": "fx_online_service",
+    "name": {
+      "ru": "ТЕСТОВЫЙ онлайн-сервис"
+    },
+    "city_id": "moscow",
+    "services": [
+      "fx_service"
+    ],
+    "mode": "online",
+    "address": null,
+    "map_query": null,
+    "lat": 55.75,
+    "lon": 37.62,
+    "hours": "Пн–Пт 09:00–18:00",
+    "phone": "+7 000 000-00-00",
+    "site": "https://example.test/",
+    "booking_url": "https://example.test/booking",
+    "serves": [
+      {
+        "city": "moscow",
+        "districts": null
+      }
+    ],
+    "citizenships": null,
+    "status": "verified",
+    "checked_at": "2026-11-01",
+    "sources": [
+      {
+        "title": "ТЕСТОВЫЙ источник (вымышленный, только для автотестов)",
+        "url": "https://example.test/source"
+      }
+    ],
+    "note": null
+  }
+]

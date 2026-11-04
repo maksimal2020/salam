@@ -1,0 +1,37 @@
+# Local run:  docker compose up --build   →  http://localhost:3000
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-app}
+      POSTGRES_DB: migrant
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d migrant"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgres://app:${POSTGRES_PASSWORD:-app}@db:5432/migrant
+      # Demo records are shown only while this is "true". Set it to "false" before launch.
+      INCLUDE_DEMO_CONTENT: ${INCLUDE_DEMO_CONTENT:-true}
+      # A moderator account is created on first start. CHANGE these values outside local development.
+      SEED_MODERATOR_EMAIL: ${SEED_MODERATOR_EMAIL:-moderator@example.local}
+      SEED_MODERATOR_PASSWORD: ${SEED_MODERATOR_PASSWORD:-change-me-please}
+    volumes:
+      # Content is mounted, so texts, catalogue, addresses and tips change without rebuilding the image.
+      - ./content:/app/content:ro
+    ports:
+      - "3000:3000"
+
+volumes:
+  dbdata:

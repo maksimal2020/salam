@@ -1,0 +1,543 @@
+[
+  {
+    "id": "moscow",
+    "name": "Москва",
+    "region": "г. Москва",
+    "lat": 55.7558,
+    "lon": 37.6173,
+    "aliases": [
+      "moscow",
+      "moskva",
+      "maskav",
+      "мәскеу",
+      "маскав",
+      "мск"
+    ],
+    "pilot": true,
+    "districts": [
+      {
+        "id": "cao",
+        "name": "ЦАО (Центральный)"
+      },
+      {
+        "id": "sao",
+        "name": "САО (Северный)"
+      },
+      {
+        "id": "svao",
+        "name": "СВАО (Северо-Восточный)"
+      },
+      {
+        "id": "vao",
+        "name": "ВАО (Восточный)"
+      },
+      {
+        "id": "uvao",
+        "name": "ЮВАО (Юго-Восточный)"
+      },
+      {
+        "id": "uao",
+        "name": "ЮАО (Южный)"
+      },
+      {
+        "id": "uzao",
+        "name": "ЮЗАО (Юго-Западный)"
+      },
+      {
+        "id": "zao",
+        "name": "ЗАО (Западный)"
+      },
+      {
+        "id": "szao",
+        "name": "СЗАО (Северо-Западный)"
+      },
+      {
+        "id": "zelao",
+        "name": "Зеленоградский АО"
+      },
+      {
+        "id": "nao",
+        "name": "Новомосковский АО"
+      },
+      {
+        "id": "tao",
+        "name": "Троицкий АО"
+      }
+    ]
+  },
+  {
+    "id": "spb",
+    "name": "Санкт-Петербург",
+    "region": "г. Санкт-Петербург",
+    "lat": 59.9343,
+    "lon": 30.3351,
+    "aliases": [
+      "saint petersburg",
+      "sankt-peterburg",
+      "peterburg",
+      "spb",
+      "питер",
+      "санкт петербург"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "novosibirsk",
+    "name": "Новосибирск",
+    "region": "Новосибирская область",
+    "lat": 55.0084,
+    "lon": 82.9357,
+    "aliases": [
+      "novosibirsk"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "yekaterinburg",
+    "name": "Екатеринбург",
+    "region": "Свердловская область",
+    "lat": 56.8389,
+    "lon": 60.6057,
+    "aliases": [
+      "yekaterinburg",
+      "ekaterinburg",
+      "екб"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "kazan",
+    "name": "Казань",
+    "region": "Республика Татарстан",
+    "lat": 55.7961,
+    "lon": 49.1064,
+    "aliases": [
+      "kazan",
+      "қазан"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "nizhny_novgorod",
+    "name": "Нижний Новгород",
+    "region": "Нижегородская область",
+    "lat": 56.2965,
+    "lon": 43.9361,
+    "aliases": [
+      "nizhny novgorod",
+      "nizhniy novgorod"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "krasnodar",
+    "name": "Краснодар",
+    "region": "Краснодарский край",
+    "lat": 45.0355,
+    "lon": 38.9753,
+    "aliases": [
+      "krasnodar"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "samara",
+    "name": "Самара",
+    "region": "Самарская область",
+    "lat": 53.1959,
+    "lon": 50.1002,
+    "aliases": [
+      "samara"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "rostov",
+    "name": "Ростов-на-Дону",
+    "region": "Ростовская область",
+    "lat": 47.2357,
+    "lon": 39.7015,
+    "aliases": [
+      "rostov",
+      "rostov-on-don",
+      "ростов"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "ufa",
+    "name": "Уфа",
+    "region": "Республика Башкортостан",
+    "lat": 54.7388,
+    "lon": 55.9721,
+    "aliases": [
+      "ufa"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "krasnoyarsk",
+    "name": "Красноярск",
+    "region": "Красноярский край",
+    "lat": 56.0153,
+    "lon": 92.8932,
+    "aliases": [
+      "krasnoyarsk"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "voronezh",
+    "name": "Воронеж",
+    "region": "Воронежская область",
+    "lat": 51.672,
+    "lon": 39.1843,
+    "aliases": [
+      "voronezh"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "perm",
+    "name": "Пермь",
+    "region": "Пермский край",
+    "lat": 58.0105,
+    "lon": 56.2502,
+    "aliases": [
+      "perm"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "volgograd",
+    "name": "Волгоград",
+    "region": "Волгоградская область",
+    "lat": 48.708,
+    "lon": 44.5133,
+    "aliases": [
+      "volgograd"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "chelyabinsk",
+    "name": "Челябинск",
+    "region": "Челябинская область",
+    "lat": 55.1644,
+    "lon": 61.4368,
+    "aliases": [
+      "chelyabinsk"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "omsk",
+    "name": "Омск",
+    "region": "Омская область",
+    "lat": 54.9885,
+    "lon": 73.3242,
+    "aliases": [
+      "omsk"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "tyumen",
+    "name": "Тюмень",
+    "region": "Тюменская область",
+    "lat": 57.1522,
+    "lon": 65.5272,
+    "aliases": [
+      "tyumen"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "kaliningrad",
+    "name": "Калининград",
+    "region": "Калининградская область",
+    "lat": 54.7104,
+    "lon": 20.4522,
+    "aliases": [
+      "kaliningrad"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "vladivostok",
+    "name": "Владивосток",
+    "region": "Приморский край",
+    "lat": 43.1155,
+    "lon": 131.8855,
+    "aliases": [
+      "vladivostok"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "khabarovsk",
+    "name": "Хабаровск",
+    "region": "Хабаровский край",
+    "lat": 48.4802,
+    "lon": 135.0719,
+    "aliases": [
+      "khabarovsk"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "irkutsk",
+    "name": "Иркутск",
+    "region": "Иркутская область",
+    "lat": 52.2869,
+    "lon": 104.305,
+    "aliases": [
+      "irkutsk"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "saratov",
+    "name": "Саратов",
+    "region": "Саратовская область",
+    "lat": 51.5336,
+    "lon": 46.0343,
+    "aliases": [
+      "saratov"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "tula",
+    "name": "Тула",
+    "region": "Тульская область",
+    "lat": 54.1961,
+    "lon": 37.6182,
+    "aliases": [
+      "tula"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "yaroslavl",
+    "name": "Ярославль",
+    "region": "Ярославская область",
+    "lat": 57.6261,
+    "lon": 39.8845,
+    "aliases": [
+      "yaroslavl"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "sochi",
+    "name": "Сочи",
+    "region": "Краснодарский край",
+    "lat": 43.5855,
+    "lon": 39.7231,
+    "aliases": [
+      "sochi"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "stavropol",
+    "name": "Ставрополь",
+    "region": "Ставропольский край",
+    "lat": 45.0428,
+    "lon": 41.9734,
+    "aliases": [
+      "stavropol"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "makhachkala",
+    "name": "Махачкала",
+    "region": "Республика Дагестан",
+    "lat": 42.9849,
+    "lon": 47.5047,
+    "aliases": [
+      "makhachkala"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "murmansk",
+    "name": "Мурманск",
+    "region": "Мурманская область",
+    "lat": 68.9585,
+    "lon": 33.0827,
+    "aliases": [
+      "murmansk"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "podolsk",
+    "name": "Подольск",
+    "region": "Московская область",
+    "lat": 55.4242,
+    "lon": 37.5547,
+    "aliases": [
+      "podolsk"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "mytishchi",
+    "name": "Мытищи",
+    "region": "Московская область",
+    "lat": 55.9105,
+    "lon": 37.7364,
+    "aliases": [
+      "mytishchi"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "khimki",
+    "name": "Химки",
+    "region": "Московская область",
+    "lat": 55.897,
+    "lon": 37.4297,
+    "aliases": [
+      "khimki"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "balashikha",
+    "name": "Балашиха",
+    "region": "Московская область",
+    "lat": 55.7963,
+    "lon": 37.9382,
+    "aliases": [
+      "balashikha"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "korolev",
+    "name": "Королёв",
+    "region": "Московская область",
+    "lat": 55.9142,
+    "lon": 37.8545,
+    "aliases": [
+      "korolev"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "lyubertsy",
+    "name": "Люберцы",
+    "region": "Московская область",
+    "lat": 55.6772,
+    "lon": 37.8931,
+    "aliases": [
+      "lyubertsy"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "krasnogorsk",
+    "name": "Красногорск",
+    "region": "Московская область",
+    "lat": 55.8317,
+    "lon": 37.33,
+    "aliases": [
+      "krasnogorsk"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "odintsovo",
+    "name": "Одинцово",
+    "region": "Московская область",
+    "lat": 55.678,
+    "lon": 37.2777,
+    "aliases": [
+      "odintsovo"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "dubna",
+    "name": "Дубна",
+    "region": "Московская область",
+    "lat": 56.733,
+    "lon": 37.166,
+    "aliases": [
+      "dubna"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "zheleznogorsk_kursk",
+    "name": "Железногорск",
+    "region": "Курская область",
+    "lat": 52.338,
+    "lon": 35.3516,
+    "aliases": [
+      "zheleznogorsk"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "zheleznogorsk_krsk",
+    "name": "Железногорск",
+    "region": "Красноярский край",
+    "lat": 56.2527,
+    "lon": 93.5324,
+    "aliases": [
+      "zheleznogorsk"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "sovetsk_kaliningrad",
+    "name": "Советск",
+    "region": "Калининградская область",
+    "lat": 55.0809,
+    "lon": 21.8872,
+    "aliases": [
+      "sovetsk"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "sovetsk_kirov",
+    "name": "Советск",
+    "region": "Кировская область",
+    "lat": 57.5857,
+    "lon": 48.9544,
+    "aliases": [
+      "sovetsk"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "zarechny_penza",
+    "name": "Заречный",
+    "region": "Пензенская область",
+    "lat": 53.1951,
+    "lon": 45.1738,
+    "aliases": [
+      "zarechny",
+      "zarechnyy"
+    ],
+    "pilot": false
+  },
+  {
+    "id": "zarechny_sverdlovsk",
+    "name": "Заречный",
+    "region": "Свердловская область",
+    "lat": 56.8125,
+    "lon": 61.326,
+    "aliases": [
+      "zarechny",
+      "zarechnyy"
+    ],
+    "pilot": false
+  }
+]

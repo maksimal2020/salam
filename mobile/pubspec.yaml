@@ -1,0 +1,63 @@
+name: migrant_guide
+description: Salam! — документы для мигрантов. Приложение для иностранных граждан в России (Android и iOS).
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  # Dart 3.4 / Flutter 3.22: в теме используются WidgetState*, а не устаревшие MaterialState*.
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.2
+  shared_preferences: ^2.3.3
+  flutter_secure_storage: ^9.2.4
+  geolocator: ">=13.0.2 <15.0.0"
+  url_launcher: ^6.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ">=4.0.0 <7.0.0"
+  # Только для разовой генерации иконок приложения: dart run flutter_launcher_icons
+  flutter_launcher_icons: ^0.14.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    # Копии content/i18n: запасные тексты, пока нет связи с сервером. Обновляются tool/sync_i18n.sh.
+    - assets/i18n/
+    # Знак «S!» для шапки и первого экрана. Исходники SVG и остальные PNG (иконки) в приложение не входят.
+    - assets/brand/icon.png
+    - assets/brand/mark_color.png
+  fonts:
+    # Inter (SIL OFL 1.1, лицензия рядом в assets/fonts). Покрывает кириллицу, ғ ӣ қ ӯ ҳ ҷ ү ө ң и oʻ — проверено по всем строкам i18n.
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.otf
+        - asset: assets/fonts/Inter-Italic.otf
+          style: italic
+        - asset: assets/fonts/Inter-Medium.otf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.otf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.otf
+          weight: 700
+        - asset: assets/fonts/Inter-ExtraBold.otf
+          weight: 800
+    - family: InterDisplay
+      fonts:
+        - asset: assets/fonts/InterDisplay-ExtraBold.otf
+          weight: 800
+
+# Иконки Android и iOS из assets/brand. Запуск: dart run flutter_launcher_icons (после flutter create / configure_platforms.py).
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/brand/icon.png
+  remove_alpha_ios: true
+  adaptive_icon_background: "#3A5BFF"
+  adaptive_icon_foreground: assets/brand/icon_adaptive_fg.png
+  adaptive_icon_monochrome: assets/brand/icon_monochrome.png

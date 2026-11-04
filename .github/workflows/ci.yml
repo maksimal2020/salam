@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  server:
+    name: Сервер (тесты API)
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: app
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U app" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      TEST_ADMIN_URL: postgres://app:app@127.0.0.1:5432/postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test -w server
+
+  flutter:
+    name: Приложение (analyze, test, APK)
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter --version
+      # Папки android/ и ios/ в репозитории нет: их создаёт flutter create, не трогая lib/, test/ и pubspec.yaml.
+      - run: flutter create --platforms=android,ios --org ru.example --project-name migrant_guide .
+      - run: python3 tool/configure_platforms.py
+      - run: flutter pub get
+      - run: dart run flutter_launcher_icons
+      # Информационные замечания печатаем, но не считаем ошибкой: нужны ошибки и предупреждения.
+      - run: flutter analyze --no-fatal-infos
+      - run: flutter test
+      - run: flutter build apk --debug --dart-define=API_BASE_URL=http://10.0.2.2:3000
+      - uses: actions/upload-artifact@v4
+        with:
+          name: salam-debug-apk
+          path: mobile/build/app/outputs/flutter-apk/app-debug.apk
