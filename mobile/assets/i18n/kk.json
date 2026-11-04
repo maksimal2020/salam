@@ -126,6 +126,7 @@
   "where.serves": "Қызмет көрсету аумағы",
   "where.districtOnly": "Аудан: {district}",
   "where.addressUnconfirmed": "Мекенжай расталмаған",
+  "where.onlineNoAddress": "Физикалық мекенжай жоқ — қызмет онлайн көрсетіледі",
   "where.mapByName": "Картадан атауы бойынша іздеу",
   "where.forDocument": "Құжат: {doc}",
   "where.citizens": "Азаматтары үшін: {countries}",

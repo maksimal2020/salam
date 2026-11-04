@@ -126,6 +126,7 @@
   "where.serves": "Территория обслуживания",
   "where.districtOnly": "Район: {district}",
   "where.addressUnconfirmed": "Адрес не подтверждён",
+  "where.onlineNoAddress": "Нет физического адреса — услуга предоставляется онлайн",
   "where.mapByName": "Поиск на карте по названию",
   "where.forDocument": "Документ: {doc}",
   "where.citizens": "Для граждан: {countries}",

@@ -539,5 +539,16 @@
       "zarechnyy"
     ],
     "pilot": false
+  },
+  {
+    "id": "kotelniki",
+    "name": "Котельники",
+    "region": "Московская область",
+    "lat": 55.66,
+    "lon": 37.857,
+    "aliases": [
+      "kotelniki"
+    ],
+    "pilot": false
   }
 ]

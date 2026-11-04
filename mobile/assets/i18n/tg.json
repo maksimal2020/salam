@@ -126,6 +126,7 @@
   "where.serves": "Ҳудуди хизматрасонӣ",
   "where.districtOnly": "Ноҳия: {district}",
   "where.addressUnconfirmed": "Суроға тасдиқ нашудааст",
+  "where.onlineNoAddress": "Суроғи воқеӣ вуҷуд надорад — хидмат онлайн пешниҳод мешавад",
   "where.mapByName": "Ҷустуҷӯ дар харита аз рӯи ном",
   "where.forDocument": "Ҳуҷҷат: {doc}",
   "where.citizens": "Барои шаҳрвандони: {countries}",

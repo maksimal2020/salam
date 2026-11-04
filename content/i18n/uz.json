@@ -126,6 +126,7 @@
   "where.serves": "Xizmat koʻrsatish hududi",
   "where.districtOnly": "Tuman: {district}",
   "where.addressUnconfirmed": "Manzil tasdiqlanmagan",
+  "where.onlineNoAddress": "Jismoniy manzil yoʻq — xizmat onlayn koʻrsatiladi",
   "where.mapByName": "Xaritada nomi boʻyicha qidirish",
   "where.forDocument": "Hujjat: {doc}",
   "where.citizens": "Fuqarolari uchun: {countries}",

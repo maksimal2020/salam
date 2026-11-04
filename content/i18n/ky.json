@@ -126,6 +126,7 @@
   "where.serves": "Кызмат көрсөтүү аймагы",
   "where.districtOnly": "Район: {district}",
   "where.addressUnconfirmed": "Дарек ырасталган эмес",
+  "where.onlineNoAddress": "Так дарек жок — кызмат онлайн көрсөтүлөт",
   "where.mapByName": "Картадан аты боюнча издөө",
   "where.forDocument": "Документ: {doc}",
   "where.citizens": "Жарандары үчүн: {countries}",

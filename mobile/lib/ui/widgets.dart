@@ -510,7 +510,12 @@ class InstitutionCard extends StatelessWidget {
             app.t('common.address'),
             inst.address != null
                 ? Text('${inst.address}, ${inst.city.region}')
-                : Text(app.t('where.addressUnconfirmed'), style: const TextStyle(fontStyle: FontStyle.italic)),
+                : Text(
+                    // «Онлайн» без адреса — это не пробел в данных (как для in_person/both),
+                    // а нормальное свойство услуги без физического места приёма.
+                    app.t(inst.mode == 'online' ? 'where.onlineNoAddress' : 'where.addressUnconfirmed'),
+                    style: const TextStyle(fontStyle: FontStyle.italic),
+                  ),
             icon: Icons.place_outlined,
           ),
           if (inst.otherCity && city != null && inst.address != null)
