@@ -363,7 +363,11 @@ async function run() {
     await page.getByTestId('city-chip').click();
     await page.getByTestId('city-manual').click();
     await pickCityManual(page, 'Казань', 'kazan');
-    await page.getByTestId('no-places').waitFor();
+    // Портал Госуслуг обслуживает всю страну (serves: scope country), поэтому для Казани
+    // в режиме «онлайн» он остаётся единственным результатом — не «нет адресов». (gosuslugi_notification
+    // matches the stale Moscow list too, so wait for the count to actually settle at 1, not just for it to appear.)
+    await page.waitForFunction(() => document.querySelectorAll('[data-testid=institution]').length === 1);
+    assert.deepEqual(await ids(page, '[data-testid=institution]'), ['gosuslugi_notification']);
   });
 
   // ---- 4. tips and the city filter
@@ -407,6 +411,15 @@ async function run() {
     };
     let r = await run1('TJ', 'work', 'in_russia');
     assert.ok(r.items.includes('patent') && !r.items.includes('work_right_eaeu') && r.items.includes('migration_registration'), r.items.join());
+    // expanding a step shows the full procedure and the addresses right there, without navigating away
+    await r.page.locator('[data-testid=step-toggle-patent]').click();
+    await r.page.locator('[data-testid=step-details-patent] [data-testid=doc-deadline]').waitFor();
+    await r.page.locator('[data-testid=step-details-patent] [data-testid=institution]').first().waitFor();
+    const stepDetails = await r.page.locator('[data-testid=step-details-patent]').innerText();
+    assert.ok(stepDetails.includes('Как подать заявление') || stepDetails.includes('Кому и при каких условиях'), stepDetails);
+    await r.page.screenshot({ path: path.join(SHOTS, '07a-checklist-step-expanded.png'), fullPage: true });
+    await r.page.locator('[data-testid=step-toggle-patent]').click();
+    await r.page.locator('[data-testid=step-details-patent]').waitFor({ state: 'hidden' });
     // mark, reload, still marked
     await r.page.locator('[data-id=patent] input[type=checkbox]').check();
     assert.ok((await r.page.getByTestId('progress').innerText()).includes('1 из'));

@@ -243,5 +243,7 @@
   "where.nearMeUnavailable": "Не удалось определить местоположение — показаны учреждения по выбранному городу.",
   "where.distance": "{km} км",
   "where.distanceApprox": "≈{km} км (по центру города)",
-  "where.nearMeEmpty": "Рядом ничего не нашлось."
+  "where.nearMeEmpty": "Рядом ничего не нашлось.",
+  "list.showDetails": "Показать процедуру и адреса",
+  "list.hideDetails": "Свернуть"
 }

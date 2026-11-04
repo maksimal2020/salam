@@ -243,5 +243,7 @@
   "where.nearMeUnavailable": "Joylashuvni aniqlab boʻlmadi — tanlangan shahar boʻyicha muassasalar koʻrsatildi.",
   "where.distance": "{km} km",
   "where.distanceApprox": "≈{km} km (shahar markazidan)",
-  "where.nearMeEmpty": "Yaqin-atrofda hech narsa topilmadi."
+  "where.nearMeEmpty": "Yaqin-atrofda hech narsa topilmadi.",
+  "list.showDetails": "Tartib va manzillarni ko‘rsatish",
+  "list.hideDetails": "Yopish"
 }

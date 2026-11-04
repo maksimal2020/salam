@@ -146,6 +146,9 @@ fieldset.field { gap: .2rem; }
 .step-check { padding-top: .1rem; }
 .step-check input { width: 26px; height: 26px; accent-color: var(--ok); }
 .step-body { display: flex; flex-direction: column; gap: .3rem; align-items: flex-start; min-width: 0; }
+.step-details { align-self: stretch; width: 100%; margin-top: .4rem; padding-top: .6rem; border-top: 1px dashed var(--line); }
+.step-details h2 { font-size: .95rem; margin: .7rem 0 .25rem; }
+.step-details ul, .step-details ol { margin-bottom: .4rem; }
 .progress { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
 .progress > div { height: 100%; background: var(--ok); transition: width .25s; }
 .progress-label { font-weight: 600; margin-bottom: .2rem; }

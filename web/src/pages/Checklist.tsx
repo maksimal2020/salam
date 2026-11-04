@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api, type DocBrief, type Source } from '../api';
 import { ErrorBox, Loading, Necessity, Stamp } from '../components';
+import { DocDetails } from './Doc';
+import { DocPlaces } from './DocWhere';
 import { useAsync } from '../hooks';
 import { useI18n } from '../i18n';
 import { useStore, type Profile } from '../store';
@@ -11,6 +13,36 @@ interface Result {
   clarify: ({ type: 'missing'; field: string } | { type: 'other_country' } | { type: 'depends_on_citizenship'; docId: string; title: string })[];
   where_to_check: Source[];
   includes_demo: boolean;
+}
+
+/** Карточка шага «Моего списка». Разворачивается на месте («там же», без перехода на другой экран)
+ * и показывает полную процедуру (кому нужно, что подготовить, как подать, сроки, стоимость, источники)
+ * и адреса учреждений в выбранном городе — чтобы всё было видно прямо здесь, а не через 2-3 перехода. */
+function StepCard({ item, done, onToggle }: { item: DocBrief; done: boolean; onToggle: () => void }) {
+  const { t } = useI18n();
+  const [open, setOpen] = useState(false);
+  return (
+    <li className={`card card-official step${done ? ' is-done' : ''}`} data-id={item.id}>
+      <label className="step-check">
+        <input type="checkbox" checked={done} onChange={onToggle} aria-label={t('list.markDone')} />
+      </label>
+      <div className="step-body">
+        <Link to={`/docs/${item.id}`}><strong>{item.title}</strong></Link>
+        <div className="badges"><Necessity value={item.necessity} /><Stamp status={item.status} /></div>
+        <p className="small">{item.summary}</p>
+        <button type="button" className="btn btn-small" onClick={() => setOpen((v) => !v)} data-testid={`step-toggle-${item.id}`}>
+          {open ? t('list.hideDetails') : t('list.showDetails')}
+        </button>
+        {open && (
+          <div className="step-details" data-testid={`step-details-${item.id}`}>
+            <DocDetails docId={item.id} />
+            <h2>{t('docs.whereButton')}</h2>
+            <DocPlaces docId={item.id} showDocTitle={false} />
+          </div>
+        )}
+      </div>
+    </li>
+  );
 }
 
 export function ChecklistPage() {
@@ -96,17 +128,7 @@ export function ChecklistPage() {
               {r.items.length === 0 && r.clarify.length === 0 && <p className="empty">{t('list.empty')}</p>}
               <ol className="steps" data-testid="list-items">
                 {r.items.map((i) => (
-                  <li key={i.id} className={`card card-official step${marks[i.id] ? ' is-done' : ''}`} data-id={i.id}>
-                    <label className="step-check">
-                      <input type="checkbox" checked={!!marks[i.id]} onChange={() => toggleMark(i.id)} aria-label={t('list.markDone')} />
-                    </label>
-                    <div className="step-body">
-                      <Link to={`/docs/${i.id}`}><strong>{i.title}</strong></Link>
-                      <div className="badges"><Necessity value={i.necessity} /><Stamp status={i.status} /></div>
-                      <p className="small">{i.summary}</p>
-                      <Link className="btn btn-small" to={`/docs/${i.id}/where`}>{t('list.showWhere')}</Link>
-                    </div>
-                  </li>
+                  <StepCard key={i.id} item={i} done={!!marks[i.id]} onToggle={() => toggleMark(i.id)} />
                 ))}
               </ol>
               {r.clarify.length > 0 && (

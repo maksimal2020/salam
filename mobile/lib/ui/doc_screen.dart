@@ -22,11 +22,7 @@ class DocScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 4, 20, 28),
           children: [
-            Async<DocFull>(
-              cacheKey: '$id|${app.lang}',
-              load: () async => DocFull.fromJson(await app.api.get('/documents/$id', query: {'lang': app.lang}, cache: true)),
-              builder: (context, d, reload) => _Body(doc: d),
-            ),
+            DocDetails(id: id),
           ],
         ),
       ),
@@ -48,8 +44,26 @@ class DocScreen extends StatelessWidget {
   }
 }
 
-class _Body extends StatelessWidget {
-  const _Body({required this.doc});
+/// Полная карточка документа (кому нужно, что подготовить, как подать, сроки, стоимость, источники),
+/// с собственной загрузкой по id — так её можно показать и на отдельном экране, и встроенной прямо
+/// в карточку шага «Моего списка», без перехода на другой экран.
+class DocDetails extends StatelessWidget {
+  const DocDetails({super.key, required this.id});
+  final String id;
+
+  @override
+  Widget build(BuildContext context) {
+    final app = context.app;
+    return Async<DocFull>(
+      cacheKey: '$id|${app.lang}',
+      load: () async => DocFull.fromJson(await app.api.get('/documents/$id', query: {'lang': app.lang}, cache: true)),
+      builder: (context, d, reload) => DocBody(doc: d),
+    );
+  }
+}
+
+class DocBody extends StatelessWidget {
+  const DocBody({super.key, required this.doc});
   final DocFull doc;
 
   Widget _h(BuildContext context, String text) => Padding(
@@ -105,7 +119,6 @@ class DocWhereScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final app = context.app;
-    final city = app.city;
     return SectionScaffold(
       section: Section.where,
       title: app.t('where.title'),
@@ -118,29 +131,7 @@ class DocWhereScreen extends StatelessWidget {
               child: CityButton(onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const CityPickerScreen()))),
             ),
             const SizedBox(height: 8),
-            if (city == null)
-              Notice(
-                key: const ValueKey('need-city'),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(app.t('city.needed')),
-                  const SizedBox(height: 8),
-                  FilledButton(
-                    onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const CityPickerScreen())),
-                    child: Text(app.t('city.manual')),
-                  ),
-                ]),
-              )
-            else
-              Async<Places>(
-                cacheKey: '$id|${app.lang}|${city.id}|${app.district ?? ''}|${app.profile.citizenship ?? ''}',
-                load: () async => Places.fromJson(await app.api.get('/documents/$id/places', cache: true, query: {
-                      'lang': app.lang,
-                      'city': city.id,
-                      'district': app.district,
-                      'citizenship': app.profile.citizenship,
-                    })),
-                builder: (context, d, reload) => _WhereBody(places: d, cityName: city.name),
-              ),
+            DocPlaces(id: id),
           ],
         ),
       ),
@@ -148,10 +139,50 @@ class DocWhereScreen extends StatelessWidget {
   }
 }
 
+/// Учреждения, где можно решить вопрос по документу [id] в выбранном городе — с собственной
+/// загрузкой данных и подсказкой выбрать город, если он не выбран. Используется и на отдельном
+/// экране «Где оформить», и встроенной прямо в карточку шага «Моего списка» (там город уже
+/// выбирается отдельной кнопкой, поэтому [showDocTitle] позволяет не повторять название документа).
+class DocPlaces extends StatelessWidget {
+  const DocPlaces({super.key, required this.id, this.showDocTitle = true});
+  final String id;
+  final bool showDocTitle;
+
+  @override
+  Widget build(BuildContext context) {
+    final app = context.app;
+    final city = app.city;
+    if (city == null) {
+      return Notice(
+        key: const ValueKey('need-city'),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(app.t('city.needed')),
+          const SizedBox(height: 8),
+          FilledButton(
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const CityPickerScreen())),
+            child: Text(app.t('city.manual')),
+          ),
+        ]),
+      );
+    }
+    return Async<Places>(
+      cacheKey: '$id|${app.lang}|${city.id}|${app.district ?? ''}|${app.profile.citizenship ?? ''}',
+      load: () async => Places.fromJson(await app.api.get('/documents/$id/places', cache: true, query: {
+            'lang': app.lang,
+            'city': city.id,
+            'district': app.district,
+            'citizenship': app.profile.citizenship,
+          })),
+      builder: (context, d, reload) => _WhereBody(places: d, cityName: city.name, showDocTitle: showDocTitle),
+    );
+  }
+}
+
 class _WhereBody extends StatelessWidget {
-  const _WhereBody({required this.places, required this.cityName});
+  const _WhereBody({required this.places, required this.cityName, this.showDocTitle = true});
   final Places places;
   final String cityName;
+  final bool showDocTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +191,8 @@ class _WhereBody extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (d.document != null) Padding(padding: const EdgeInsets.only(bottom: 8), child: Text(app.t('where.forDocument', {'doc': d.document!.title}), key: const ValueKey('where-doc'))),
+        if (showDocTitle && d.document != null)
+          Padding(padding: const EdgeInsets.only(bottom: 8), child: Text(app.t('where.forDocument', {'doc': d.document!.title}), key: const ValueKey('where-doc'))),
         if (d.whereKind != 'institutions')
           Notice(
             key: const ValueKey('no-institution'),

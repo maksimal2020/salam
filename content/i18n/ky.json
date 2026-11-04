@@ -243,5 +243,7 @@
   "where.nearMeUnavailable": "Жайгашкан жер аныкталган жок — тандалган шаар боюнча мекемелер көрсөтүлдү.",
   "where.distance": "{km} км",
   "where.distanceApprox": "≈{km} км (шаардын борборунан)",
-  "where.nearMeEmpty": "Жакын жерден эч нерсе табылган жок."
+  "where.nearMeEmpty": "Жакын жерден эч нерсе табылган жок.",
+  "list.showDetails": "Жол-жобо жана даректерди көрсөтүү",
+  "list.hideDetails": "Жыйыштыруу"
 }

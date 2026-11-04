@@ -163,7 +163,7 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
               if (r.includesDemo) Notice(demo: true, child: Text(app.t('list.demoBanner'))),
               if (r.items.isNotEmpty) _RingCard(done: done, total: r.items.length),
               if (r.items.isEmpty && r.clarify.isEmpty) EmptyNote(app.t('list.empty')),
-              for (final i in r.items) _Step(item: i),
+              for (final i in r.items) _Step(key: ValueKey('step-widget-${i.id}'), item: i),
               if (r.clarify.isNotEmpty) _Clarify(result: r),
             ],
           );
@@ -223,13 +223,24 @@ class _Choice extends StatelessWidget {
       );
 }
 
-class _Step extends StatelessWidget {
-  const _Step({required this.item});
+/// Карточка шага «Моего списка». Разворачивается на месте («там же», без перехода на другой
+/// экран) и показывает полную процедуру (кому нужно, что подготовить, как подать, сроки,
+/// стоимость, источники) и адреса учреждений в выбранном городе.
+class _Step extends StatefulWidget {
+  const _Step({super.key, required this.item});
   final DocBrief item;
+
+  @override
+  State<_Step> createState() => _StepState();
+}
+
+class _StepState extends State<_Step> {
+  bool _open = false;
 
   @override
   Widget build(BuildContext context) {
     final app = context.app;
+    final item = widget.item;
     final done = app.marks[item.id] == true;
     return AppCard(
       key: ValueKey('step-${item.id}'),
@@ -260,9 +271,28 @@ class _Step extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(item.summary, style: Theme.of(context).textTheme.bodySmall),
                 TextButton(
-                  onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => DocWhereScreen(id: item.id))),
-                  child: Text(app.t('list.showWhere')),
+                  key: ValueKey('step-toggle-${item.id}'),
+                  onPressed: () => setState(() => _open = !_open),
+                  child: Text(app.t(_open ? 'list.hideDetails' : 'list.showDetails')),
                 ),
+                if (_open)
+                  Padding(
+                    key: ValueKey('step-details-${item.id}'),
+                    padding: const EdgeInsets.only(top: 4, bottom: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Divider(height: 1),
+                        const SizedBox(height: 8),
+                        DocDetails(id: item.id),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8, bottom: 4),
+                          child: Text(app.t('docs.whereButton'), style: Theme.of(context).textTheme.titleMedium),
+                        ),
+                        DocPlaces(id: item.id, showDocTitle: false),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),

@@ -243,5 +243,7 @@
   "where.nearMeUnavailable": "Ҷойгиршавӣ муайян нашуд — муассисаҳо аз рӯи шаҳри интихобшуда нишон дода мешаванд.",
   "where.distance": "{km} км",
   "where.distanceApprox": "≈{km} км (аз марки шаҳр)",
-  "where.nearMeEmpty": "Дар наздикӣ чизе ёфт нашуд."
+  "where.nearMeEmpty": "Дар наздикӣ чизе ёфт нашуд.",
+  "list.showDetails": "Намоиши тартиб ва нишониҳо",
+  "list.hideDetails": "Пушидан"
 }
