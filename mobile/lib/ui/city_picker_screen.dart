@@ -194,7 +194,10 @@ class _CityPickerScreenState extends State<CityPickerScreen> {
               onTap: () => _done(c),
             ),
         const SizedBox(height: 8),
-        Row(children: [
+        // Wrap, а не Row: на узком экране «Назад» и «Пропустить» вместе могут не
+        // поместиться в одну строку — тогда вторая кнопка переносится вниз
+        // вместо того, чтобы вылезать за край.
+        Wrap(spacing: 4, runSpacing: 4, children: [
           TextButton(
             onPressed: () => setState(() {
               _message = null;
