@@ -213,11 +213,14 @@ test('institutions/nearby: sorted by distance, flags institutions without confir
   assert.ok(cao);
   assert.equal(cao.distance_approx, false);
   assert.ok(cao.distance_km < 1);
-  // Учреждение без подтверждённых координат (mmc_moscow) попадает в список по центру
-  // города и честно помечено approx: true — это не точное расстояние до здания.
-  const mmc = near.institutions.find((i: any) => i.id === 'mmc_moscow');
-  assert.ok(mmc);
-  assert.equal(mmc.distance_approx, true);
+  // Учреждение без подтверждённых координат (fx_no_coords) попадает в список по центру
+  // города и честно помечено approx: true — это не точное расстояние до здания. (Раньше
+  // этот тест использовал mmc_moscow как пример «без координат», но его адрес позже
+  // геокодировали по-настоящему — так что для теста завели отдельную тестовую запись,
+  // которая остаётся без координат независимо от состояния боевого контента.)
+  const noCoords = near.institutions.find((i: any) => i.id === 'fx_no_coords');
+  assert.ok(noCoords);
+  assert.equal(noCoords.distance_approx, true);
   // Чисто онлайн-канал (mode=online) — не физическое место, в «рядом со мной» не попадает,
   // даже если у него координаты есть.
   assert.ok(!near.institutions.some((i: any) => i.id === 'fx_online_service'));

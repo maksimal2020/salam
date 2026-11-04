@@ -110,6 +110,41 @@
     "note": null
   },
   {
+    "id": "fx_no_coords",
+    "name": {
+      "ru": "ТЕСТОВОЕ учреждение без подтверждённых координат"
+    },
+    "city_id": "moscow",
+    "services": [
+      "inn"
+    ],
+    "mode": "in_person",
+    "address": "ТЕСТОВАЯ улица, 4, Москва",
+    "map_query": null,
+    "lat": null,
+    "lon": null,
+    "hours": "Пн–Пт 09:00–18:00",
+    "phone": "+7 000 000-00-00",
+    "site": "https://example.test/",
+    "booking_url": "https://example.test/booking",
+    "serves": [
+      {
+        "city": "moscow",
+        "districts": null
+      }
+    ],
+    "citizenships": null,
+    "status": "verified",
+    "checked_at": "2026-11-01",
+    "sources": [
+      {
+        "title": "ТЕСТОВЫЙ источник (вымышленный, только для автотестов)",
+        "url": "https://example.test/source"
+      }
+    ],
+    "note": null
+  },
+  {
     "id": "fx_online_service",
     "name": {
       "ru": "ТЕСТОВЫЙ онлайн-сервис"
