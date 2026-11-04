@@ -22,7 +22,7 @@ class DocScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 4, 20, 28),
           children: [
-            DocDetails(id: id),
+            DocProcedure(id: id),
           ],
         ),
       ),
@@ -47,8 +47,8 @@ class DocScreen extends StatelessWidget {
 /// Полная карточка документа (кому нужно, что подготовить, как подать, сроки, стоимость, источники),
 /// с собственной загрузкой по id — так её можно показать и на отдельном экране, и встроенной прямо
 /// в карточку шага «Моего списка», без перехода на другой экран.
-class DocDetails extends StatelessWidget {
-  const DocDetails({super.key, required this.id});
+class DocProcedure extends StatelessWidget {
+  const DocProcedure({super.key, required this.id});
   final String id;
 
   @override

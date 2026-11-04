@@ -284,7 +284,7 @@ class _StepState extends State<_Step> {
                       children: [
                         const Divider(height: 1),
                         const SizedBox(height: 8),
-                        DocDetails(id: item.id),
+                        DocProcedure(id: item.id),
                         Padding(
                           padding: const EdgeInsets.only(top: 8, bottom: 4),
                           child: Text(app.t('docs.whereButton'), style: Theme.of(context).textTheme.titleMedium),
