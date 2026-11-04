@@ -136,8 +136,14 @@ Future<AppState> makeState({
   Map<String, Object> prefsInit = const {},
   http.Client? client,
 }) async {
+  // ignore: avoid_print
+  print('[trace] makeState: setMockInitialValues begin');
   SharedPreferences.setMockInitialValues(prefsInit);
+  // ignore: avoid_print
+  print('[trace] makeState: getInstance begin');
   final prefs = await SharedPreferences.getInstance();
+  // ignore: avoid_print
+  print('[trace] makeState: getInstance done');
   final tokens = MemoryTokenStore();
   final api = ApiClient(
     baseUrl: 'http://test',
@@ -146,6 +152,10 @@ Future<AppState> makeState({
     client: client ?? MockClient((r) async => fakeServer(r)),
   );
   final state = AppState(prefs: prefs, api: api, tokens: tokens, location: location ?? FakeLocation(const LocationOutcome(LocationStatus.denied)));
+  // ignore: avoid_print
+  print('[trace] makeState: state.init begin');
   await state.init();
+  // ignore: avoid_print
+  print('[trace] makeState: state.init done');
   return state;
 }

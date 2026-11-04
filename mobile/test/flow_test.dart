@@ -79,7 +79,7 @@ void main() {
       expect(find.text(name), findsOneWidget);
     }
     await stop(tester);
-  });
+  }, timeout: const Timeout(Duration(seconds: 25)));
 
   testWidgets('после выбора языка предлагают определить город или выбрать вручную', (tester) async {
     _mark('test2: makeState begin');
@@ -97,7 +97,7 @@ void main() {
     _mark('test2: asserts done, stop begin');
     await stop(tester);
     _mark('test2: stop done');
-  });
+  }, timeout: const Timeout(Duration(seconds: 25)));
 
   testWidgets('отказ в геолокации ведёт к ручному выбору с пояснением', (tester) async {
     final loc = FakeLocation(const LocationOutcome(LocationStatus.denied));
@@ -112,7 +112,7 @@ void main() {
     expect(find.byKey(const ValueKey('city-search')), findsOneWidget);
     expect(state.city, isNull);
     await stop(tester);
-  });
+  }, timeout: const Timeout(Duration(seconds: 25)));
 
   testWidgets('найденный город нужно подтвердить; координаты не сохраняются', (tester) async {
     final loc = FakeLocation(const LocationOutcome(LocationStatus.ok, lat: 55.7512, lon: 37.6184));
@@ -131,7 +131,7 @@ void main() {
     final stored = state.prefs.getKeys().map((k) => '${state.prefs.get(k)}').join('\n');
     expect(stored, isNot(contains('55.75')));
     await stop(tester);
-  });
+  }, timeout: const Timeout(Duration(seconds: 25)));
 
   testWidgets('ручной выбор города и показ его в шапке', (tester) async {
     final state = await makeState();
@@ -140,7 +140,7 @@ void main() {
     expect(find.byKey(const ValueKey('city-chip')), findsOneWidget);
     expect(find.text('Казань, Республика Татарстан'), findsWidgets);
     await stop(tester);
-  });
+  }, timeout: const Timeout(Duration(seconds: 25)));
 
   testWidgets('нет подтверждённых адресов: честное сообщение, без выдумок', (tester) async {
     final state = await makeState();
@@ -151,7 +151,7 @@ void main() {
     expect(find.byWidgetPredicate((w) => w.key is ValueKey<String> && (w.key as ValueKey<String>).value.startsWith('inst-')), findsNothing,
         reason: 'карточек учреждений быть не должно');
     await stop(tester);
-  });
+  }, timeout: const Timeout(Duration(seconds: 25)));
 
   testWidgets('смена города обновляет адреса; учреждение из другого города поясняется', (tester) async {
     final state = await makeState(prefsInit: {
@@ -169,7 +169,7 @@ void main() {
     expect(find.text('Центр в Москве'), findsOneWidget);
     expect(find.textContaining('ул. Тестовая, 1, Москва'), findsWidgets, reason: 'фактический адрес и пояснение про обслуживание Химок');
     await stop(tester);
-  });
+  }, timeout: const Timeout(Duration(seconds: 25)));
 
   testWidgets('для Москвы просят выбрать район, затем показывают подразделение', (tester) async {
     final state = await makeState(prefsInit: {
@@ -185,5 +185,5 @@ void main() {
     await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
     expect(find.text('Подразделение ЦАО'), findsOneWidget);
     await stop(tester);
-  });
+  }, timeout: const Timeout(Duration(seconds: 25)));
 }
