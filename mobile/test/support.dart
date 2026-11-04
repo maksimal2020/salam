@@ -131,19 +131,34 @@ http.Response fakeServer(http.Request r) {
   return http.Response(jsonEncode(body), 200, headers: {'content-type': 'application/json; charset=utf-8'});
 }
 
+/// Содержимое assets/i18n/ru.json, прочитанное с диска один раз на весь прогон тестов.
+///
+/// AppState.init() при отсутствии сохранённых строк грузит их через
+/// rootBundle.loadString(). Этот путь надёжно работает один первый раз за
+/// процесс `flutter test`, но у flutter_test есть известная особенность:
+/// повторный rootBundle.loadString() в том же файле тестов (после того как
+/// уже был хотя бы один pumpWidget/тест) может зависнуть на неопределённое
+/// время — Future от биндинга ассетов не завершается. Это не баг
+/// приложения: в реальном приложении rootBundle вызывается один раз за
+/// запуск. Чтобы тесты не зависели от этой особенности тестового биндинга,
+/// заранее кладём те же строки в SharedPreferences — тогда AppState находит
+/// их в кэше (prefs.getString('strings:$lang')) и вообще не обращается к
+/// rootBundle.
+String? _ruStringsJson;
+String _loadRuStringsJson() {
+  return _ruStringsJson ??= File('assets/i18n/ru.json').readAsStringSync();
+}
+
 Future<AppState> makeState({
   LocationProvider? location,
   Map<String, Object> prefsInit = const {},
   http.Client? client,
 }) async {
-  // ignore: avoid_print
-  print('[trace] makeState: setMockInitialValues begin');
-  SharedPreferences.setMockInitialValues(prefsInit);
-  // ignore: avoid_print
-  print('[trace] makeState: getInstance begin');
+  SharedPreferences.setMockInitialValues({
+    'strings:ru': _loadRuStringsJson(),
+    ...prefsInit,
+  });
   final prefs = await SharedPreferences.getInstance();
-  // ignore: avoid_print
-  print('[trace] makeState: getInstance done');
   final tokens = MemoryTokenStore();
   final api = ApiClient(
     baseUrl: 'http://test',
@@ -152,10 +167,6 @@ Future<AppState> makeState({
     client: client ?? MockClient((r) async => fakeServer(r)),
   );
   final state = AppState(prefs: prefs, api: api, tokens: tokens, location: location ?? FakeLocation(const LocationOutcome(LocationStatus.denied)));
-  // ignore: avoid_print
-  print('[trace] makeState: state.init begin');
   await state.init();
-  // ignore: avoid_print
-  print('[trace] makeState: state.init done');
   return state;
 }

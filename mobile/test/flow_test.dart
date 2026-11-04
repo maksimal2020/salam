@@ -1,15 +1,8 @@
 // Сценарии из задания: выбор языка, ручной выбор города, отказ в геолокации, смена города, нет подтверждённых адресов.
 //
-// ВРЕМЕННО (отладка зависания в CI): у каждого теста короткий таймаут и в
-// start()/при тапе на язык выводятся метки в stdout — чтобы в логе CI было
-// видно, на каком именно await застряло выполнение, если зависание повторится.
-// Это диагностика, не постоянная часть тестов; убрать после того, как причина
-// зависания найдена и исправлена.
-@Timeout(Duration(seconds: 25))
-library;
-
-import 'dart:developer' as developer;
-
+// У каждого теста короткий явный таймаут (вместо дефолтных 10 минут
+// flutter_test): если что-то зависнет, прогон CI упадёт за секунды, а не
+// за счёт целого часа впустую потраченного времени.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:migrant_guide/api/models.dart';
@@ -19,22 +12,13 @@ import 'package:migrant_guide/state/location_provider.dart';
 
 import 'support.dart';
 
-void _mark(String label) {
-  // ignore: avoid_print
-  print('[trace] $label');
-  developer.log(label, name: 'flow_test.trace');
-}
-
 Future<void> start(WidgetTester tester, AppState state) async {
   // Размер обычного телефона (360×780 dp): на стандартном окне 800×600 цветная шапка и нижнее меню оставляют списку слишком мало места.
   tester.view.physicalSize = const Size(1080, 2340);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
-  _mark('start: pumpWidget begin');
   await tester.pumpWidget(MigrantGuideApp(state: state));
-  _mark('start: pumpWidget done, pumpAndSettle begin');
   await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
-  _mark('start: pumpAndSettle done');
 }
 
 Future<void> stop(WidgetTester tester) async {
@@ -82,21 +66,14 @@ void main() {
   }, timeout: const Timeout(Duration(seconds: 25)));
 
   testWidgets('после выбора языка предлагают определить город или выбрать вручную', (tester) async {
-    _mark('test2: makeState begin');
     final state = await makeState();
-    _mark('test2: makeState done, start begin');
     await start(tester, state);
-    _mark('test2: start done, tap lang-ru begin');
     await tester.tap(find.byKey(const ValueKey('lang-ru')));
-    _mark('test2: tap done, pumpAndSettle begin');
     await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
-    _mark('test2: pumpAndSettle done, asserting');
     expect(find.byKey(const ValueKey('city-detect')), findsOneWidget);
     expect(find.byKey(const ValueKey('city-manual')), findsOneWidget);
     expect(find.byKey(const ValueKey('city-skip')), findsOneWidget);
-    _mark('test2: asserts done, stop begin');
     await stop(tester);
-    _mark('test2: stop done');
   }, timeout: const Timeout(Duration(seconds: 25)));
 
   testWidgets('отказ в геолокации ведёт к ручному выбору с пояснением', (tester) async {

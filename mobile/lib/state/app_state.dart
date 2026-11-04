@@ -121,16 +121,10 @@ class AppState extends ChangeNotifier {
   // ---------------------------------------------------------------- тексты
 
   Future<Map<String, String>?> _bundled(String code) async {
-    // ignore: avoid_print
-    print('[trace] _bundled: rootBundle.loadString begin code=$code');
     try {
       final raw = await rootBundle.loadString('assets/i18n/$code.json');
-      // ignore: avoid_print
-      print('[trace] _bundled: rootBundle.loadString done, len=${raw.length}');
       return (jsonDecode(raw) as Map).map((k, v) => MapEntry(k.toString(), v.toString()));
-    } catch (e) {
-      // ignore: avoid_print
-      print('[trace] _bundled: rootBundle.loadString threw $e');
+    } catch (_) {
       return null;
     }
   }
@@ -138,30 +132,20 @@ class AppState extends ChangeNotifier {
   /// Сначала показываем сохранённые или встроенные тексты, затем обновляем с сервера.
   Future<void> _loadStrings() async {
     final request = ++_stringsRequest;
-    // ignore: avoid_print
-    print('[trace] _loadStrings: begin request=$request lang=$lang');
     Map<String, String>? local;
     try {
       final saved = prefs.getString('strings:$lang');
       if (saved != null) local = (jsonDecode(saved) as Map).map((k, v) => MapEntry(k.toString(), v.toString()));
     } catch (_) {}
-    // ignore: avoid_print
-    print('[trace] _loadStrings: prefs checked, saved=${local != null}, calling _bundled begin');
     local ??= await _bundled(lang);
-    // ignore: avoid_print
-    print('[trace] _loadStrings: _bundled done, local=${local != null}');
     if (request != _stringsRequest) return;
     if (local != null) {
       strings = local;
       ready = true;
       notifyListeners();
     }
-    // ignore: avoid_print
-    print('[trace] _loadStrings: api.get begin');
     try {
       final r = asMapSafe(await api.get('/i18n/$lang'));
-      // ignore: avoid_print
-      print('[trace] _loadStrings: api.get done');
       final fresh = asMapSafe(r['strings']).map((k, v) => MapEntry(k, v.toString()));
       if (request != _stringsRequest) return;
       if (fresh.isNotEmpty) {
@@ -169,16 +153,12 @@ class AppState extends ChangeNotifier {
         prefs.setString('strings:$lang', jsonEncode(fresh));
       }
       offline = false;
-    } catch (e) {
-      // ignore: avoid_print
-      print('[trace] _loadStrings: api.get threw $e');
+    } catch (_) {
       if (request != _stringsRequest) return;
       offline = true;
     }
     ready = true;
     notifyListeners();
-    // ignore: avoid_print
-    print('[trace] _loadStrings: end request=$request');
   }
 
   static Map<String, dynamic> asMapSafe(dynamic v) => v is Map ? v.cast<String, dynamic>() : <String, dynamic>{};
