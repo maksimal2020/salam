@@ -16,6 +16,7 @@ Future<void> start(WidgetTester tester, AppState state) async {
   // Размер обычного телефона (360×780 dp): на стандартном окне 800×600 цветная шапка и нижнее меню оставляют списку слишком мало места.
   tester.view.physicalSize = const Size(1080, 2340);
   tester.view.devicePixelRatio = 3;
+  // Подстраховка на случай, если тест упадёт раньше stop() и explicit-сброс там не выполнится.
   addTearDown(tester.view.reset);
   await tester.pumpWidget(MigrantGuideApp(state: state));
   await tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
@@ -25,6 +26,11 @@ Future<void> stop(WidgetTester tester) async {
   // Убираем дерево, чтобы не осталось таймеров поиска.
   await tester.pumpWidget(const SizedBox());
   await tester.pump(const Duration(milliseconds: 400));
+  // Размер окна возвращаем к размеру по умолчанию только после того, как старое
+  // дерево виджетов полностью разобрано — иначе финальный layout пришедшегося
+  // на снос дерева кадра успевает пройти уже с другим (меньшим) размером окна
+  // и даёт ложное "RenderFlex overflowed" на уже уничтоженном виджете.
+  tester.view.reset();
 }
 
 Future<void> typeCity(WidgetTester tester, String text) async {
