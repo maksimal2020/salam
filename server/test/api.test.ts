@@ -28,14 +28,24 @@ test('all five language packs are complete and share the same keys', async () =>
   }
 });
 
-test('documents come back in the requested language and Russian fallback is flagged', async () => {
+test('documents come back in the requested language', async () => {
   const kk = (await get('/documents/patent?lang=kk')).json;
   const ru = (await get('/documents/patent?lang=ru')).json;
   assert.notEqual(kk.title, ru.title);
-  assert.equal(kk.details_fallback, true);
-  assert.equal(ru.details_fallback, false);
   assert.equal(kk.deadline, null);          // demo record: no terms or prices
   assert.equal(kk.cost, null);
+});
+
+// patent's `details` are now fully translated into all 5 languages (see content/catalog/documents.json),
+// so it can no longer exercise the Russian-fallback path. fx_service (a test-only fixture, see
+// e2e/fixtures/content/catalog/documents.json) keeps `details` in `ru` only on purpose, specifically to
+// test this fallback behaviour independently of how complete the real catalog's translations are.
+test('documents fall back to Russian details when a translation is missing, and flag it', async () => {
+  const kk = (await get('/documents/fx_service?lang=kk')).json;
+  const ru = (await get('/documents/fx_service?lang=ru')).json;
+  assert.equal(kk.details_fallback, true);
+  assert.equal(ru.details_fallback, false);
+  assert.deepEqual(kk.details, ru.details);
 });
 
 test('verified record shows terms and cost, demo record never does', async () => {
