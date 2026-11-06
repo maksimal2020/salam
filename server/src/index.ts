@@ -8,11 +8,15 @@ const pool = createPool();
 const applied = await migrate(pool);
 if (applied.length) console.log('migrations applied:', applied.join(', '));
 
-const has = await pool.query('select count(*)::int as n from translations');
-if (has.rows[0].n === 0) {
-  const r = await importContent(pool, loadContent(config.contentDirs));
-  console.log('content imported (first start):', r.counts);
-}
+// Контент из content/ перечитывается в базу при КАЖДОМ старте, а не только при первом: это
+// единственный источник правды для текстов/учреждений/документов, и importContent() внутри
+// полностью и атомарно (в одной транзакции) заменяет свои таблицы, не трогая аккаунты и
+// объявления — так что это безопасно и дёшево делать каждый раз. Иначе правки в content/*.json
+// не доходят до пользователя после перезапуска уже существующей базы (ровно так и произошло:
+// пользователь обновил файлы и перезапустил docker compose, но карточки остались старыми,
+// потому что раньше импорт срабатывал только при пустой таблице translations).
+const r = await importContent(pool, loadContent(config.contentDirs));
+console.log('content imported:', r.counts);
 if (config.seedModeratorEmail && config.seedModeratorPassword) {
   console.log('seed moderator:', await ensureModerator(pool, config.seedModeratorEmail, config.seedModeratorPassword));
 }
