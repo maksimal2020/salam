@@ -111,10 +111,11 @@ test('checklist: demo records are left out when demo content is switched off', a
   const docs = (await env.pool.query('select * from documents order by sort')).rows;
   const cits = (await env.pool.query('select id, grp from citizenships')).rows;
   const off = evaluateChecklist(docs, cits, { citizenship: 'TJ', purpose: 'work', stage: 'in_russia' }, false);
-  // Only verified records remain: the test fixture, plus patent, russian_exam and
-  // migration_registration (now verified with real data — see content/catalog/documents.json)
-  // for a working Tajik citizen.
-  assert.deepEqual(off.items.map((i) => i.id).sort(), ['fx_service', 'patent', 'russian_exam', 'migration_registration'].sort());
+  // Only verified records remain: the test fixture, plus patent, russian_exam,
+  // migration_registration, medical_exam, inn and snils (now verified with real data —
+  // see content/catalog/documents.json) for a working Tajik citizen.
+  assert.deepEqual(off.items.map((i) => i.id).sort(),
+    ['fx_service', 'patent', 'russian_exam', 'migration_registration', 'medical_exam', 'inn', 'snils'].sort());
   const on = evaluateChecklist(docs, cits, { citizenship: 'TJ', purpose: 'work', stage: 'in_russia' }, true);
   assert.ok(on.items.length > off.items.length);
 });

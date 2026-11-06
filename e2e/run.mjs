@@ -450,9 +450,9 @@ async function run() {
 
   await scenario('Мой список: демо-записи помечены, подтверждённая запись показывает срок и стоимость', async () => {
     const { page } = await newCtx({}, { ...ready, city: CITY.moscow });
-    // snils остаётся demo-записью без подтверждённых срока/стоимости: оба раздела просто не
+    // bank_account остаётся demo-записью без подтверждённых срока/стоимости: оба раздела просто не
     // показываются (см. mobile/doc_screen.dart, web/Doc.tsx — плейсхолдер "Не подтверждено" убран).
-    await page.goto('/docs/snils');
+    await page.goto('/docs/bank_account');
     await page.getByTestId('demo-warning').waitFor();
     assert.equal(await page.getByTestId('doc-deadline').count(), 0);
     assert.equal(await page.getByTestId('doc-cost').count(), 0);

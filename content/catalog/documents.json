@@ -358,8 +358,8 @@
       "work"
     ],
     "necessity": "mandatory",
-    "status": "demo",
-    "checked_at": null,
+    "status": "verified",
+    "checked_at": "2026-11-07",
     "rules": {
       "stages": [
         "in_russia"
@@ -740,8 +740,8 @@
       "health"
     ],
     "necessity": "conditional",
-    "status": "demo",
-    "checked_at": null,
+    "status": "verified",
+    "checked_at": "2026-11-07",
     "rules": {
       "stages": [
         "in_russia"
@@ -1110,8 +1110,8 @@
       "study"
     ],
     "necessity": "conditional",
-    "status": "demo",
-    "checked_at": null,
+    "status": "verified",
+    "checked_at": "2026-11-07",
     "rules": {
       "stages": [
         "before",
@@ -1225,8 +1225,8 @@
       "money"
     ],
     "necessity": "conditional",
-    "status": "demo",
-    "checked_at": null,
+    "status": "verified",
+    "checked_at": "2026-11-07",
     "rules": {
       "stages": [
         "in_russia"
@@ -1348,8 +1348,8 @@
       "money"
     ],
     "necessity": "conditional",
-    "status": "demo",
-    "checked_at": null,
+    "status": "verified",
+    "checked_at": "2026-11-07",
     "rules": {
       "stages": [
         "in_russia"
