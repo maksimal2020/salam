@@ -210,7 +210,7 @@ export async function importContent(pool: Pool, c: Content): Promise<{ counts: R
     }
     for (const t of c.tips) {
       await client.query('insert into tips (id,topic,city_id,kind,status,updated_at,title,body,source) values ($1,$2,$3,$4,$5,$6,$7,$8,$9)',
-        [t.id, t.topic, t.city_id ?? null, t.kind ?? 'editorial', t.status, t.updated_at, t.title, t.body, t.source ?? null]);
+        [t.id, t.topic, t.city_id ?? null, t.kind ?? 'editorial', t.status, t.updated_at, t.title, t.body, JSON.stringify(t.source ?? null)]);
     }
     await client.query('insert into settings (key, value) values ($1,$2)', ['reference', JSON.stringify({
       purposes: c.reference.purposes, stages: c.reference.stages, flags: c.reference.flags, where_to_check: c.reference.where_to_check ?? [],
