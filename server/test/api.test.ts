@@ -427,6 +427,39 @@ test('accounts: registration, login, wrong password, logout', async () => {
   assert.equal((await get('/me', t)).status, 401);
 });
 
+// ---------------------------------------------------------------- feedback
+test('feedback: anyone can send a message, moderators see it and can resolve it', async () => {
+  // too short — rejected
+  assert.equal((await post('/feedback', { message: 'нет' })).status, 400);
+
+  // anonymous submission (no account needed)
+  const anon = await post('/feedback', { message: 'В адресе ММЦ Сахарово опечатка, проверьте пожалуйста.' });
+  assert.equal(anon.status, 201);
+
+  // a logged-in user's email is kept even though the field itself is optional
+  const authorTok = await user('feedback-author@test.local');
+  const withUser = await post('/feedback', { message: 'Было бы здорово добавить раздел про СНИЛС для детей.' }, authorTok);
+  assert.equal(withUser.status, 201);
+
+  const { ensureModerator } = await import('../src/auth.js');
+  await ensureModerator(env.pool, 'feedback-mod@test.local', 'modpassword1');
+  const modTok = (await post('/auth/login', { email: 'feedback-mod@test.local', password: 'modpassword1' })).json.token as string;
+
+  // a regular user cannot read the queue
+  assert.equal((await get('/mod/feedback', authorTok)).status, 403);
+
+  const queue = (await get('/mod/feedback', modTok)).json;
+  assert.ok(queue.feedback.some((f: any) => f.message.includes('опечатка')));
+  const withUserRow = queue.feedback.find((f: any) => f.message.includes('СНИЛС'));
+  assert.equal(withUserRow.email, 'feedback-author@test.local');
+  assert.ok(queue.newCount >= 2);
+
+  const resolved = await post(`/mod/feedback/${withUserRow.id}/resolve`, {}, modTok);
+  assert.equal(resolved.status, 200);
+  const afterResolve = (await get('/mod/feedback', modTok)).json;
+  assert.ok(!afterResolve.feedback.some((f: any) => f.id === withUserRow.id));
+});
+
 // ---------------------------------------------------------------- content updates
 test('re-importing content keeps listings that point at cities (content can be updated after launch)', async () => {
   const author = await user('reimport@example.com');

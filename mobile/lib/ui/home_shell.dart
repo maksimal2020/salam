@@ -8,6 +8,7 @@ import 'brand.dart';
 import 'city_picker_screen.dart';
 import 'data_screen.dart';
 import 'docs_screen.dart';
+import 'feedback_screen.dart';
 import 'language_screen.dart';
 import 'theme.dart';
 import 'tips_screen.dart';
@@ -133,8 +134,12 @@ class _HomeHeader extends StatelessWidget {
                           tooltip: app.t('nav.more'),
                           onSelected: (v) {
                             if (v == 'data') Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const DataScreen()));
+                            if (v == 'feedback') Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const FeedbackScreen()));
                           },
-                          itemBuilder: (_) => [PopupMenuItem<String>(value: 'data', child: Text(app.t('nav.more')))],
+                          itemBuilder: (_) => [
+                            PopupMenuItem<String>(value: 'data', child: Text(app.t('nav.more'))),
+                            PopupMenuItem<String>(value: 'feedback', child: Text(app.t('feedback.title'))),
+                          ],
                           child: _HeaderPill(round: true, child: Icon(Icons.more_horiz, size: 22, color: tone.onHeader)),
                         ),
                       ],

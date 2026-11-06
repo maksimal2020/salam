@@ -9,6 +9,7 @@ import { importContent, loadContent } from './content.js';
 import { publicRoutes } from './routes/public.js';
 import { adsRoutes } from './routes/ads.js';
 import { accountRoutes } from './routes/account.js';
+import { feedbackRoutes } from './routes/feedback.js';
 
 export function createApp(pool: Pool) {
   const app = express();
@@ -34,6 +35,7 @@ export function createApp(pool: Pool) {
   api.use(publicRoutes(pool));
   api.use(adsRoutes({ pool, checker: getChecker }));
   api.use(accountRoutes({ pool, reloadContent }));
+  api.use(feedbackRoutes({ pool }));
   api.use((_req, res) => res.status(404).json({ code: 'not_found' }));
   app.use('/api', api);
 

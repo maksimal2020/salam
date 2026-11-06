@@ -645,6 +645,31 @@ async function run() {
     await page.waitForFunction(() => document.querySelectorAll('[data-testid=listing-card]').length === 1);
   });
 
+  // ---- 6b. Обратная связь
+  await scenario('Обратная связь: доступна без аккаунта, короткое сообщение отклоняется, отправленное попадает к модератору', async () => {
+    const { page } = await newCtx({}, { ...ready, city: CITY.moscow });
+    await page.goto('/feedback');
+    await page.getByTestId('feedback-message').fill('нет');
+    await page.getByTestId('feedback-submit').click();
+    await page.locator('.notice-error').waitFor();
+    assert.equal(await page.getByTestId('feedback-sent').count(), 0);
+
+    await page.getByTestId('feedback-message').fill('Адрес ММЦ в разделе патент указан неверно, проверьте пожалуйста.');
+    await page.getByTestId('feedback-email').fill('tester@e2e.local');
+    await page.getByTestId('feedback-submit').click();
+    await page.getByTestId('feedback-sent').waitFor();
+
+    // обычный пользователь не может читать очередь обратной связи
+    const plainTok = (await api('POST', '/auth/register', { email: 'feedback-plain-e2e@e2e.local', password: 'seed-pass-1234' })).json.token;
+    assert.equal((await api('GET', '/mod/feedback', undefined, plainTok)).status, 403);
+
+    // модератор (посеянный при старте сервера) видит отправленное сообщение
+    const modTok = (await api('POST', '/auth/login', { email: MOD.email, password: MOD.password })).json.token;
+    const q = await api('GET', '/mod/feedback', undefined, modTok);
+    assert.equal(q.status, 200);
+    assert.ok(q.json.feedback.some((f) => f.message.includes('ММЦ') && f.email === 'tester@e2e.local'));
+  });
+
   // ---- 7. PWA
   await scenario('PWA: манифест, иконки, service worker и работа без сети', async () => {
     const { ctx, page } = await newCtx({}, { ...ready, city: CITY.moscow });

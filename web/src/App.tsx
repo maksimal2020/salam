@@ -17,6 +17,7 @@ import { MyAdsPage } from './pages/MyAds';
 import { AuthPage } from './pages/Auth';
 import { ModPage } from './pages/Mod';
 import { DataPage } from './pages/Data';
+import { FeedbackPage } from './pages/Feedback';
 
 /** First screen: language names are written in the languages themselves. */
 function LanguageScreen() {
@@ -107,9 +108,10 @@ export function App() {
           <Route path="/register" element={<AuthPage mode="register" />} />
           <Route path="/mod" element={<ModPage />} />
           <Route path="/data" element={<DataPage />} />
+          <Route path="/feedback" element={<FeedbackPage />} />
           <Route path="*" element={<p className="muted">{t('error.notFound')}</p>} />
         </Routes>
-        <footer className="foot"><Link to="/data">{t('nav.more')}</Link></footer>
+        <footer className="foot"><Link to="/data">{t('nav.more')}</Link> · <Link to="/feedback" data-testid="footer-feedback">{t('feedback.title')}</Link></footer>
       </main>
       <nav className="tabbar" aria-label="main">
         {([['docs', '/docs'], ['where', '/where'], ['tips', '/tips'], ['ads', '/ads']] as const).map(([k, to]) => (
