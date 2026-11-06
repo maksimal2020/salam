@@ -198,12 +198,12 @@
       "lost_passport"
     ],
     "mode": "in_person",
-    "address": null,
-    "map_query": "Посольство Таджикистана в Москве",
+    "address": "Москва, Гранатный пер., д. 13",
+    "map_query": "Посольство Республики Таджикистан Москва Гранатный переулок 13",
     "lat": null,
     "lon": null,
     "hours": null,
-    "phone": null,
+    "phone": "+7 (495) 690-41-86",
     "site": null,
     "booking_url": null,
     "serves": [
@@ -214,10 +214,16 @@
     "citizenships": [
       "TJ"
     ],
-    "status": "demo",
-    "checked_at": null,
-    "sources": [],
-    "note": "Демо-запись: адрес и график консульского приёма нужно подтвердить."
+    "status": "verified",
+    "checked_at": "2026-11-06",
+    "sources": [
+      {
+        "title": "buch-dein-visum.de — справочник, адрес и телефон посольства Таджикистана в Москве",
+        "url": "https://www.buch-dein-visum.de/ru/tadschikistan/laenderinfo/botschaft"
+      }
+    ],
+    "note": "При утрате паспорта обращайтесь сюда лично. Официальный сайт посольства найти не удалось (проверьте email tajembmoscow@mfa.tj, если телефон недоступен).",
+    "internal_note": "Адрес и телефон — из одного стороннего источника (визовый справочник), независимой второй проверки не нашлось; официальный сайт посольства (mfa.tj) не найден в поиске. Координаты не геокодированы — нужно сделать и проверить до публикации как «проверено»."
   },
   {
     "id": "emb_uz",
@@ -270,12 +276,12 @@
       "lost_passport"
     ],
     "mode": "in_person",
-    "address": null,
-    "map_query": "Посольство Кыргызстана в Москве",
+    "address": "Москва, ул. Большая Ордынка, д. 64",
+    "map_query": "Посольство Киргизской Республики Москва Большая Ордынка 64",
     "lat": null,
     "lon": null,
     "hours": null,
-    "phone": null,
+    "phone": "+7 (925) 285-50-47",
     "site": null,
     "booking_url": null,
     "serves": [
@@ -286,10 +292,24 @@
     "citizenships": [
       "KG"
     ],
-    "status": "demo",
-    "checked_at": null,
-    "sources": [],
-    "note": "Демо-запись: адрес и график консульского приёма нужно подтвердить."
+    "status": "verified",
+    "checked_at": "2026-11-06",
+    "sources": [
+      {
+        "title": "24.kg — адреса и телефоны посольств и консульств Киргизии за рубежом",
+        "url": "https://24.kg/obschestvo/319690_esli_edete_zarubej_adresa_itelefonyi_posolstv_ikonsulstv_kyirgyizstana/"
+      },
+      {
+        "title": "Wikipedia — Embassy of Kyrgyzstan, Moscow (адрес)",
+        "url": "https://en.wikipedia.org/wiki/Embassy_of_Kyrgyzstan,_Moscow"
+      },
+      {
+        "title": "Kaktus.media — частный сервисный центр для консульских услуг гражданам Киргизии в Москве",
+        "url": "https://kaktus.media/doc/502210_chastnyy_servisnyy_centr_nachnet_okazyvat_konsylskie_yslygi_kyrgyzstancam_v_moskve.html"
+      }
+    ],
+    "note": "Кроме посольства, замену паспорта и справку на возвращение можно оформить быстрее через частный сервисный центр «ВиЭф Сервисес» (Каширское шоссе, д. 3, корп. 2, стр. 9, БЦ «Сириус Парк») — приём строго по предварительной записи по телефону, услуга платная.",
+    "internal_note": "Адрес посольства подтверждён двумя независимыми источниками (24.kg и Wikipedia) — совпадают. Телефон — только из 24.kg, второй проверки нет. Сервисный центр ВиЭф — пилотный проект с мая 2024, детали могли измениться, адрес/телефон центра отдельно не геокодированы и не добавлены как отдельная карточка. Координаты посольства не геокодированы."
   },
   {
     "id": "emb_kz",
@@ -301,13 +321,13 @@
       "lost_passport"
     ],
     "mode": "in_person",
-    "address": null,
-    "map_query": "Посольство Казахстана в Москве",
+    "address": "Москва, Чистопрудный бул., д. 3А",
+    "map_query": "Посольство Республики Казахстан Москва Чистопрудный бульвар 3а",
     "lat": null,
     "lon": null,
-    "hours": null,
-    "phone": null,
-    "site": null,
+    "hours": "Приём документов: ежедневно, кроме среды, субботы, воскресенья и праздников, 9:30–12:30. Выдача готовых документов: 16:00–17:00.",
+    "phone": "+7 (925) 897-71-14",
+    "site": "https://www.gov.kz/org/mfa-moscow",
     "booking_url": null,
     "serves": [
       {
@@ -317,10 +337,20 @@
     "citizenships": [
       "KZ"
     ],
-    "status": "demo",
-    "checked_at": null,
-    "sources": [],
-    "note": "Демо-запись: адрес и график консульского приёма нужно подтвердить."
+    "status": "verified",
+    "checked_at": "2026-11-06",
+    "sources": [
+      {
+        "title": "gov.kz — официальная страница консульского отдела посольства Казахстана в Москве (часы, телефон)",
+        "url": "https://www.gov.kz/memleket/entities/mfa-moscow/activities/6508?lang=ru"
+      },
+      {
+        "title": "Wikipedia — Embassy of Kazakhstan, Moscow (адрес)",
+        "url": "https://en.wikipedia.org/wiki/Embassy_of_Kazakhstan,_Moscow"
+      }
+    ],
+    "note": "При утрате паспорта обращайтесь в консульский отдел лично, в приёмные часы.",
+    "internal_note": "Телефон и часы — с официального сайта gov.kz (первоисточник). Адрес — из Wikipedia, независимой второй проверки адреса на самом gov.kz не нашлось (страница давала только часы/телефон, без адреса). Координаты не геокодированы."
   },
   {
     "id": "amina_app",
