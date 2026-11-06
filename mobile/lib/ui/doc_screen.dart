@@ -76,7 +76,6 @@ class DocBody extends StatelessWidget {
     final app = context.app;
     final d = doc;
     final b = d.brief;
-    final unconfirmed = Text(app.t('docs.notConfirmed'), style: const TextStyle(fontStyle: FontStyle.italic));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -99,10 +98,12 @@ class DocBody extends StatelessWidget {
             Padding(padding: const EdgeInsets.only(bottom: 4), child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('${i + 1}.  '), Expanded(child: Text(d.details.how[i]))])),
         ],
         if (d.details.renewal != null) ...[_h(context, app.t('docs.renewal')), Text(d.details.renewal!)],
-        _h(context, app.t('docs.deadline')),
-        d.deadline != null ? Text(d.deadline![app.lang] ?? d.deadline!['ru'] ?? '') : unconfirmed,
-        _h(context, app.t('docs.cost')),
-        d.cost != null ? Text(d.cost![app.lang] ?? d.cost!['ru'] ?? '') : unconfirmed,
+        // Пустые «Сроки»/«Стоимость» не показываем вовсе — не для каждой процедуры это вообще
+        // применимо (например, многие бесплатны или не привязаны к фиксированному сроку), и
+        // заголовок с «не подтверждено» под почти каждым документом читался как жалоба на
+        // качество данных, а не как содержательная информация.
+        if (d.deadline != null) ...[_h(context, app.t('docs.deadline')), Text(d.deadline![app.lang] ?? d.deadline!['ru'] ?? '')],
+        if (d.cost != null) ...[_h(context, app.t('docs.cost')), Text(d.cost![app.lang] ?? d.cost!['ru'] ?? '')],
         _h(context, app.t('docs.sources')),
         SourceList(sources: d.sources, checkedAt: b.checkedAt),
         const SizedBox(height: 24),

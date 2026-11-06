@@ -198,6 +198,9 @@ export async function importContent(pool: Pool, c: Content): Promise<{ counts: R
          d.deadline ?? null, d.cost ?? null, JSON.stringify(d.sources ?? []), d.where_kind ?? 'institutions', d.where_note ?? null, d.official_search ?? null]);
     }
     for (const i of c.institutions) {
+      // i.internal_note (если есть) намеренно НЕ импортируется: это пометки для тех, кто ведёт
+      // content/institutions.json — про источник адреса, метод геокодирования, уверенность в
+      // совпадении и т.п. Конечному пользователю это не нужно и не должно попадать в API/карточку.
       await client.query(
         `insert into institutions (id,city_id,name,services,mode,address,map_query,lat,lon,hours,phone,site,booking_url,serves,citizenships,status,checked_at,sources,note)
          values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)`,

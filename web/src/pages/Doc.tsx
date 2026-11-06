@@ -9,7 +9,6 @@ import { useI18n } from '../i18n';
  * прямо в карточку шага «Моего списка» — без перехода на другой экран. */
 export function DocBody({ d }: { d: DocFull }) {
   const { t, lang } = useI18n();
-  const unconfirmed = <em>{t('docs.notConfirmed')}</em>;
   return (
     <>
       <div className="badges"><Necessity value={d.necessity} /><Stamp status={d.status} /></div>
@@ -23,10 +22,10 @@ export function DocBody({ d }: { d: DocFull }) {
       {d.details.how && (<><h2>{t('docs.how')}</h2><ol>{d.details.how.map((x) => <li key={x}>{x}</li>)}</ol></>)}
       {d.details.renewal && (<><h2>{t('docs.renewal')}</h2><p>{d.details.renewal}</p></>)}
 
-      <h2>{t('docs.deadline')}</h2>
-      <p data-testid="doc-deadline">{d.deadline ? (d.deadline[lang] ?? d.deadline.ru) : unconfirmed}</p>
-      <h2>{t('docs.cost')}</h2>
-      <p data-testid="doc-cost">{d.cost ? (d.cost[lang] ?? d.cost.ru) : unconfirmed}</p>
+      {/* Пустые «Сроки»/«Стоимость» не показываем вовсе — заголовок с «не подтверждено» под
+          почти каждым документом читался как жалоба на качество данных, а не как информация. */}
+      {d.deadline && (<><h2>{t('docs.deadline')}</h2><p data-testid="doc-deadline">{d.deadline[lang] ?? d.deadline.ru}</p></>)}
+      {d.cost && (<><h2>{t('docs.cost')}</h2><p data-testid="doc-cost">{d.cost[lang] ?? d.cost.ru}</p></>)}
 
       <h2>{t('docs.sources')}</h2>
       <SourceList sources={d.sources} checkedAt={d.checked_at} />
