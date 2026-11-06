@@ -32,8 +32,14 @@ test('documents come back in the requested language', async () => {
   const kk = (await get('/documents/patent?lang=kk')).json;
   const ru = (await get('/documents/patent?lang=ru')).json;
   assert.notEqual(kk.title, ru.title);
-  assert.equal(kk.deadline, null);          // demo record: no terms or prices
-  assert.equal(kk.cost, null);
+  // patent is now a verified record with real deadline/cost from mc.mos.ru (see content/catalog/documents.json) —
+  // deadline/cost aren't translated per-language yet, so both lang queries return the same ru-keyed object.
+  assert.equal(kk.deadline.ru, ru.deadline.ru);
+  assert.equal(kk.cost.ru, ru.cost.ru);
+
+  const snilsKk = (await get('/documents/snils?lang=kk')).json;
+  assert.equal(snilsKk.deadline, null);     // demo record: no terms or prices
+  assert.equal(snilsKk.cost, null);
 });
 
 // patent's `details` are now fully translated into all 5 languages (see content/catalog/documents.json),
@@ -105,7 +111,9 @@ test('checklist: demo records are left out when demo content is switched off', a
   const docs = (await env.pool.query('select * from documents order by sort')).rows;
   const cits = (await env.pool.query('select id, grp from citizenships')).rows;
   const off = evaluateChecklist(docs, cits, { citizenship: 'TJ', purpose: 'work', stage: 'in_russia' }, false);
-  assert.deepEqual(off.items.map((i) => i.id), ['fx_service']);   // only the verified fixture remains
+  // Only verified records remain: the test fixture, plus patent (now verified with real
+  // mc.mos.ru data — see content/catalog/documents.json) for a working Tajik citizen.
+  assert.deepEqual(off.items.map((i) => i.id).sort(), ['fx_service', 'patent'].sort());
   const on = evaluateChecklist(docs, cits, { citizenship: 'TJ', purpose: 'work', stage: 'in_russia' }, true);
   assert.ok(on.items.length > off.items.length);
 });

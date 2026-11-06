@@ -450,15 +450,22 @@ async function run() {
 
   await scenario('Мой список: демо-записи помечены, подтверждённая запись показывает срок и стоимость', async () => {
     const { page } = await newCtx({}, { ...ready, city: CITY.moscow });
-    await page.goto('/docs/patent');
+    // snils остаётся demo-записью без подтверждённых срока/стоимости: оба раздела просто не
+    // показываются (см. mobile/doc_screen.dart, web/Doc.tsx — плейсхолдер "Не подтверждено" убран).
+    await page.goto('/docs/snils');
     await page.getByTestId('demo-warning').waitFor();
-    assert.ok((await page.getByTestId('doc-deadline').innerText()).includes('Не подтверждено'));
-    assert.ok((await page.getByTestId('doc-cost').innerText()).includes('Не подтверждено'));
+    assert.equal(await page.getByTestId('doc-deadline').count(), 0);
+    assert.equal(await page.getByTestId('doc-cost').count(), 0);
     await page.goto('/docs/fx_service');
     assert.ok((await page.getByTestId('doc-deadline').innerText()).includes('до 10 рабочих дней'));
     assert.ok((await page.getByTestId('doc-cost').innerText()).includes('1000 руб.'));
     assert.equal(await page.getByTestId('demo-warning').count(), 0);
     assert.ok((await text(page)).includes('Проверено'));
+    // patent теперь тоже настоящая verified-запись (реальные данные с mc.mos.ru).
+    await page.goto('/docs/patent');
+    assert.equal(await page.getByTestId('demo-warning').count(), 0);
+    assert.ok((await page.getByTestId('doc-deadline').innerText()).includes('30 календарных дней'));
+    assert.ok((await page.getByTestId('doc-cost').innerText()).includes('26 000'));
   });
 
   // ---- 6. advertisements: complete path
