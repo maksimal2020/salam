@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { LANGS, useI18n } from './i18n';
 import { useStore } from './store';
 import { CityPicker } from './CityPicker';
-import { Icon } from './components';
+import { Icon, BrandMark, TileCode, TileArrow } from './components';
 import { DocsPage } from './pages/Docs';
 import { DocPage } from './pages/Doc';
 import { DocWherePage } from './pages/DocWhere';
@@ -19,17 +19,41 @@ import { ModPage } from './pages/Mod';
 import { DataPage } from './pages/Data';
 import { FeedbackPage } from './pages/Feedback';
 
+/** One color per language tile: five colors from the app's logo. Orange and yellow tiles use dark text. */
+const TILE_COLORS: { bg: string; fg: string; dark: boolean }[] = [
+  { bg: '#3A5BFF', fg: '#fff', dark: false },
+  { bg: '#7C4DFF', fg: '#fff', dark: false },
+  { bg: '#FF8A3D', fg: '#1B1B2B', dark: true },
+  { bg: '#E8397A', fg: '#fff', dark: false },
+  { bg: '#FFC93C', fg: '#1B1B2B', dark: true },
+];
+
 /** First screen: language names are written in the languages themselves. */
 function LanguageScreen() {
   const { setLang } = useI18n();
   return (
-    <main className="onboarding" data-testid="language-screen">
+    <main className="onboarding lang-screen" data-testid="language-screen">
+      <BrandMark />
       <h1 className="brand-big">Salam!</h1>
-      <p className="muted">Тил · Забон · Language · Til</p>
-      <div className="stack">
-        {LANGS.map((l) => (
-          <button key={l.code} className="btn btn-lang" lang={l.code} onClick={() => setLang(l.code)} data-lang={l.code}>{l.native}</button>
-        ))}
+      <p className="muted"><Icon name="globe" /> Тил · Забон · Language · Til</p>
+      <div className="lang-tiles">
+        {LANGS.map((l, i) => {
+          const c = TILE_COLORS[i % TILE_COLORS.length];
+          return (
+            <button
+              key={l.code}
+              className="lang-tile"
+              style={{ background: c.bg, color: c.fg }}
+              lang={l.code}
+              onClick={() => setLang(l.code)}
+              data-lang={l.code}
+            >
+              <TileCode code={l.code} fg={c.fg} dark={c.dark} />
+              {l.native}
+              <TileArrow />
+            </button>
+          );
+        })}
       </div>
     </main>
   );

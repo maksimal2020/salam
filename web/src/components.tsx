@@ -122,6 +122,53 @@ export function InstitutionCard({ inst }: { inst: Institution }) {
   );
 }
 
+/** App logo mark: gradient tile with the "S!" sign, used on the language screen. */
+export function BrandMark({ size = 84 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 88 88" aria-hidden="true">
+      <defs>
+        <linearGradient id="brandGrad" x1="0" y1="0" x2="88" y2="88" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#3A5BFF" />
+          <stop offset="1" stopColor="#7C4DFF" />
+        </linearGradient>
+      </defs>
+      <rect width="88" height="88" rx="24" fill="url(#brandGrad)" />
+      <path
+        d="M31 30c7-3 16-3 20 1 2 2 2 5-1 6-2 1-9-2-13-1-3 1-3 4 0 5 4 2 15 1 17 8 2 6-3 11-12 12-7 1-15-1-19-5l4-5c4 3 10 4 14 3 3-1 4-4 1-5-4-2-15-1-17-8-2-6 2-10 6-11z"
+        fill="#fff"
+      />
+      <rect x="60" y="20" width="8" height="26" rx="4" fill="#FFC93C" />
+      <circle cx="64" cy="56" r="5" fill="#FFC93C" />
+    </svg>
+  );
+}
+
+/** White circular arrow used on the end of a language tile. */
+export function TileArrow() {
+  return (
+    <span className="lang-arrow" aria-hidden="true">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B1B2B" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M5 12h14M13 6l6 6-6 6" />
+      </svg>
+    </span>
+  );
+}
+
+/**
+ * Two-letter language code in a round badge. Painted as a CSS background image
+ * (not DOM text) so a browser's `innerText` of the enclosing button never
+ * includes it — the e2e suite reads that text and expects only the
+ * language's own name.
+ */
+export function TileCode({ code, fg, dark }: { code: string; fg: string; dark: boolean }) {
+  const circleFill = dark ? 'rgba(0,0,0,.18)' : 'rgba(255,255,255,.44)';
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='46' height='46' viewBox='0 0 46 46'>`
+    + `<circle cx='23' cy='23' r='23' fill='${circleFill}'/>`
+    + `<text x='23' y='24' text-anchor='middle' dominant-baseline='central' font-family='system-ui,sans-serif' font-size='15' font-weight='800' fill='${fg}'>${code.toUpperCase()}</text>`
+    + `</svg>`;
+  return <span className="lang-code" aria-hidden="true" style={{ backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(svg)}")` }} />;
+}
+
 export function Icon({ name }: { name: 'docs' | 'where' | 'tips' | 'ads' | 'globe' | 'user' | 'pin' }) {
   const p: Record<string, string> = {
     docs: 'M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6',
