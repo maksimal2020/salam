@@ -4,7 +4,7 @@ import '../api/models.dart';
 import '../state/app_scope.dart';
 import 'widgets.dart';
 
-const List<String> kTopics = ['housing', 'groceries', 'clothes', 'secondhand', 'transport', 'mobile', 'jobsearch', 'scams'];
+const List<String> kTopics = ['housing', 'groceries', 'clothes', 'secondhand', 'transport', 'mobile', 'sim', 'banking', 'jobsearch', 'scams', 'legal'];
 
 /// Раздел «Полезные советы»: редакционные материалы, которые не выдаются за официальную инструкцию.
 class TipsTab extends StatefulWidget {

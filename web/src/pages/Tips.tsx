@@ -6,7 +6,7 @@ import { useI18n } from '../i18n';
 import { useStore } from '../store';
 
 interface Tip { id: string; topic: string; updated_at: string; title: string; body: string; city: { id: string; name: string; region: string } | null }
-const TOPICS = ['housing', 'groceries', 'clothes', 'secondhand', 'transport', 'mobile', 'jobsearch', 'scams'];
+const TOPICS = ['housing', 'groceries', 'clothes', 'secondhand', 'transport', 'mobile', 'sim', 'banking', 'jobsearch', 'scams', 'legal'];
 
 export function TipsPage() {
   const { t, tk, lang, fmtDate } = useI18n();
