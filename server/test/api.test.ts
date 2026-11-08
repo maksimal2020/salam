@@ -112,12 +112,17 @@ test('checklist: demo records are left out when demo content is switched off', a
   const cits = (await env.pool.query('select id, grp from citizenships')).rows;
   const off = evaluateChecklist(docs, cits, { citizenship: 'TJ', purpose: 'work', stage: 'in_russia' }, false);
   // Only verified records remain: the test fixture, plus patent, russian_exam,
-  // migration_registration, medical_exam, inn and snils (now verified with real data —
-  // see content/catalog/documents.json) for a working Tajik citizen.
+  // migration_registration, medical_exam, inn, snils, bank_account, employment_documents
+  // and health_insurance (all now verified with real sourced data — see
+  // content/catalog/documents.json) for a working Tajik citizen.
   assert.deepEqual(off.items.map((i) => i.id).sort(),
-    ['fx_service', 'patent', 'russian_exam', 'migration_registration', 'medical_exam', 'inn', 'snils'].sort());
+    ['fx_service', 'patent', 'russian_exam', 'migration_registration', 'medical_exam', 'inn', 'snils',
+      'bank_account', 'employment_documents', 'health_insurance'].sort());
+  // The demo-content toggle now makes no difference: every document in the
+  // catalog has been brought to verified status, so there is nothing left
+  // for it to filter out.
   const on = evaluateChecklist(docs, cits, { citizenship: 'TJ', purpose: 'work', stage: 'in_russia' }, true);
-  assert.ok(on.items.length > off.items.length);
+  assert.equal(on.items.length, off.items.length);
 });
 
 // ---------------------------------------------------------------- cities
@@ -272,7 +277,13 @@ test('coverage table lists scenarios and cities', async () => {
   const c = (await get('/coverage')).json;
   assert.equal(c.scenarios.length, 27);
   const states = new Set(c.scenarios.map((s: any) => s.state));
-  assert.ok(states.has('partial') && states.has('demo'));
+  // 'demo' is no longer reachable: passport_valid/entry_documents (stage "before")
+  // and health_insurance (stage "in_russia") are universal, always-verified documents,
+  // so every scenario now has at least one verified match. 'partial' still occurs
+  // for the "other" citizenship group, which has unresolved depends_on_citizenship
+  // clarify items alongside those universal verified documents.
+  assert.ok(states.has('partial'));
+  assert.ok(!states.has('demo'));
   assert.ok(c.cities.some((x: any) => x.id === 'moscow'));
   assert.ok(c.documents.find((d: any) => d.id === 'inn').cells.moscow);
 });

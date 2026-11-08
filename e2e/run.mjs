@@ -283,9 +283,11 @@ async function run() {
     assert.ok(got.includes('mfc_moscow') && got.includes('fns_moscow'), got.join());
     assert.ok(!got.includes('mmc_moscow'), 'institution without this service must not appear');
     const demoCard = page.locator('[data-id=mfc_moscow]');
+    // mfc_moscow is a verified network-wide ("online") record with no single
+    // address (100+ offices across Moscow), so the address stays unconfirmed
+    // even though the record itself is now checked and sourced.
     assert.ok((await demoCard.innerText()).includes('Адрес не подтверждён'));
-    assert.ok((await demoCard.innerText()).includes('Демо, не проверено'));
-    assert.ok((await demoCard.innerText()).includes('Не проверено'));
+    assert.ok((await demoCard.innerText()).includes('Проверено:'));
     const href = await demoCard.getByTestId('map-link').getAttribute('href');
     assert.ok(href.startsWith('https://yandex.ru/maps/?text='));
     await page.screenshot({ path: path.join(SHOTS, '04-where-moscow.png'), fullPage: true });
@@ -450,12 +452,15 @@ async function run() {
 
   await scenario('Мой список: демо-записи помечены, подтверждённая запись показывает срок и стоимость', async () => {
     const { page } = await newCtx({}, { ...ready, city: CITY.moscow });
-    // bank_account остаётся demo-записью без подтверждённых срока/стоимости: оба раздела просто не
+    // bank_account теперь тоже verified-запись (реальные требования банков и ЦБ), но без
+    // подтверждённого официального срока/стоимости услуги — эти два раздела просто не
     // показываются (см. mobile/doc_screen.dart, web/Doc.tsx — плейсхолдер "Не подтверждено" убран).
     await page.goto('/docs/bank_account');
-    await page.getByTestId('demo-warning').waitFor();
+    await page.waitForSelector('.stamp');
+    assert.equal(await page.getByTestId('demo-warning').count(), 0);
     assert.equal(await page.getByTestId('doc-deadline').count(), 0);
     assert.equal(await page.getByTestId('doc-cost').count(), 0);
+    assert.ok((await text(page)).includes('Проверено'));
     await page.goto('/docs/fx_service');
     assert.ok((await page.getByTestId('doc-deadline').innerText()).includes('до 10 рабочих дней'));
     assert.ok((await page.getByTestId('doc-cost').innerText()).includes('1000 руб.'));
