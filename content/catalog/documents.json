@@ -1504,7 +1504,7 @@
       "money"
     ],
     "necessity": "service",
-    "status": "demo",
+    "status": "verified",
     "checked_at": "2026-11-08",
     "rules": {
       "stages": [
@@ -1611,7 +1611,16 @@
     },
     "deadline": null,
     "cost": null,
-    "sources": [],
+    "sources": [
+      {
+        "title": "consultant.ru — ФЗ № 115-ФЗ от 07.08.2001 «О противодействии легализации (отмыванию) доходов, полученных преступным путём» (обязанность банка идентифицировать клиента, в т.ч. иностранного гражданина)",
+        "url": "https://www.consultant.ru/document/cons_doc_LAW_32834/"
+      },
+      {
+        "title": "cbr.ru — Банк России: Единая биометрическая система (обязательная биометрическая идентификация клиентов банков)",
+        "url": "https://cbr.ru/fintech/digital_biometric_id/"
+      }
+    ],
     "where_kind": "self",
     "where_note": "Банк вы выбираете сами. Справочник банков и частных помощников вынесен во второй этап.",
     "official_search": null
@@ -1623,7 +1632,7 @@
       "lost"
     ],
     "necessity": "mandatory",
-    "status": "demo",
+    "status": "verified",
     "checked_at": "2026-11-08",
     "rules": {
       "stages": [
@@ -1739,7 +1748,16 @@
     },
     "deadline": null,
     "cost": null,
-    "sources": [],
+    "sources": [
+      {
+        "title": "МВД России — Утеря документов иностранными гражданами на территории РФ",
+        "url": "https://мвд.рф/md/foreign/loss.php"
+      },
+      {
+        "title": "МВД России — Главное управление по вопросам миграции",
+        "url": "https://мвд.рф/mvd/structure1/Glavnie_upravlenija/guvm"
+      }
+    ],
     "where_kind": "institutions",
     "where_note": null,
     "official_search": null

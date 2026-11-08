@@ -452,15 +452,17 @@ async function run() {
 
   await scenario('Мой список: демо-записи помечены, подтверждённая запись показывает срок и стоимость', async () => {
     const { page } = await newCtx({}, { ...ready, city: CITY.moscow });
-    // bank_account остаётся demo-записью: её единственный источник (ppt.ru) пришлось убрать,
-    // так как это не государственный/законодательный ресурс, а официальной замены для её
-    // конкретных утверждений найти не удалось — оба раздела просто не показываются
-    // (см. mobile/doc_screen.dart, web/Doc.tsx — плейсхолдер "Не подтверждено" убран).
+    // bank_account теперь тоже verified-запись (ФЗ-115 об идентификации клиента + ЦБ РФ о
+    // единой биометрической системе), но без подтверждённого официального срока/стоимости
+    // услуги — эти два раздела просто не показываются (см. mobile/doc_screen.dart,
+    // web/Doc.tsx — плейсхолдер "Не подтверждено" убран). Демо-записей в каталоге документов
+    // больше не осталось вовсе, поэтому отдельно проверяем только это.
     await page.goto('/docs/bank_account');
     await page.waitForSelector('.stamp');
-    assert.equal(await page.getByTestId('demo-warning').count(), 1);
+    assert.equal(await page.getByTestId('demo-warning').count(), 0);
     assert.equal(await page.getByTestId('doc-deadline').count(), 0);
     assert.equal(await page.getByTestId('doc-cost').count(), 0);
+    assert.ok((await text(page)).includes('Проверено'));
     await page.goto('/docs/fx_service');
     assert.ok((await page.getByTestId('doc-deadline').innerText()).includes('до 10 рабочих дней'));
     assert.ok((await page.getByTestId('doc-cost').innerText()).includes('1000 руб.'));
