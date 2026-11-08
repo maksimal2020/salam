@@ -58,3 +58,32 @@ jobs:
         with:
           name: salam-debug-apk
           path: mobile/build/app/outputs/flutter-apk/app-debug.apk
+
+  flutter-ios:
+    name: Приложение (iOS, сборка без подписи)
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter --version
+      # Папки android/ и ios/ в репозитории нет: их создаёт flutter create, не трогая lib/, test/ и pubspec.yaml.
+      - run: flutter create --platforms=android,ios --org ru.example --project-name migrant_guide .
+      # flutter create кладёт шаблонный test/widget_test.dart (ссылается на MyApp) — он нашему приложению не нужен.
+      - run: rm -f test/widget_test.dart
+      - run: python3 tool/configure_platforms.py
+      - run: flutter pub get
+      - run: dart run flutter_launcher_icons
+      - run: flutter analyze --no-fatal-infos
+      - run: flutter test
+        timeout-minutes: 15
+      # Без подписи (--no-codesign) — проверяем только то, что приложение компилируется.
+      # Для сборки .ipa под TestFlight/App Store понадобятся сертификат, provisioning
+      # profile или ключ App Store Connect API (Apple Developer Program) — этого шага
+      # здесь нет.
+      - run: flutter build ios --release --no-codesign --dart-define=API_BASE_URL=https://example.invalid
