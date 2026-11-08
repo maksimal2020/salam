@@ -42,7 +42,7 @@ export function TipsPage() {
             </div>
             <h3>{tip.title}</h3>
             <p>{tip.body}</p>
-            <p className="muted small">{t('common.updated', { date: fmtDate(tip.updated_at) })} · {t('tips.editorialNote')}</p>
+            <p className="muted small">{t('common.updated', { date: fmtDate(tip.updated_at) })}</p>
           </article>
         ))}
       </div>

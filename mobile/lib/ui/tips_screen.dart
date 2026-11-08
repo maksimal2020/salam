@@ -101,7 +101,7 @@ class _TipsTabState extends State<TipsTab> {
                         const SizedBox(height: 10),
                         Text(tip.body),
                         const SizedBox(height: 10),
-                        Text('${app.t('common.updated', {'date': app.fmtDate(tip.updatedAt)})} · ${app.t('tips.editorialNote')}', style: Theme.of(context).textTheme.bodySmall),
+                        Text(app.t('common.updated', {'date': app.fmtDate(tip.updatedAt)}), style: Theme.of(context).textTheme.bodySmall),
                       ],
                     ),
                   ),
