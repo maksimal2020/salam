@@ -112,17 +112,17 @@ test('checklist: demo records are left out when demo content is switched off', a
   const cits = (await env.pool.query('select id, grp from citizenships')).rows;
   const off = evaluateChecklist(docs, cits, { citizenship: 'TJ', purpose: 'work', stage: 'in_russia' }, false);
   // Only verified records remain: the test fixture, plus patent, russian_exam,
-  // migration_registration, medical_exam, inn, snils, bank_account, employment_documents
-  // and health_insurance (all now verified with real sourced data — see
-  // content/catalog/documents.json) for a working Tajik citizen.
+  // migration_registration, medical_exam, inn, snils, employment_documents and
+  // health_insurance (verified with real sourced data — see
+  // content/catalog/documents.json) for a working Tajik citizen. bank_account
+  // went back to demo: its only citable source (ppt.ru) had to be dropped
+  // because it isn't a government or legislative source, and no official
+  // replacement for its specific claims could be found.
   assert.deepEqual(off.items.map((i) => i.id).sort(),
     ['fx_service', 'patent', 'russian_exam', 'migration_registration', 'medical_exam', 'inn', 'snils',
-      'bank_account', 'employment_documents', 'health_insurance'].sort());
-  // The demo-content toggle now makes no difference: every document in the
-  // catalog has been brought to verified status, so there is nothing left
-  // for it to filter out.
+      'employment_documents', 'health_insurance'].sort());
   const on = evaluateChecklist(docs, cits, { citizenship: 'TJ', purpose: 'work', stage: 'in_russia' }, true);
-  assert.equal(on.items.length, off.items.length);
+  assert.ok(on.items.length > off.items.length);
 });
 
 // ---------------------------------------------------------------- cities
