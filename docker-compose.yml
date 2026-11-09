@@ -2,6 +2,7 @@
 services:
   db:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_USER: app
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-app}
@@ -30,8 +31,9 @@ services:
     volumes:
       # Content is mounted, so texts, catalogue, addresses and tips change without rebuilding the image.
       - ./content:/app/content:ro
+    restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
 
 volumes:
   dbdata:
