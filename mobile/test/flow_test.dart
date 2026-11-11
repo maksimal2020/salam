@@ -82,6 +82,37 @@ void main() {
     await stop(tester);
   }, timeout: const Timeout(Duration(seconds: 25)));
 
+  testWidgets('с экрана города можно вернуться к выбору языка — кнопкой и системным «Назад»', (tester) async {
+    final state = await makeState();
+    await start(tester, state);
+    Future<void> settle() => tester.pumpAndSettle(const Duration(milliseconds: 100), EnginePhase.sendSemanticsUpdate, const Duration(seconds: 10));
+
+    // Кнопка «Назад» в шапке.
+    await tester.tap(find.byKey(const ValueKey('lang-ru')));
+    await settle();
+    expect(find.byKey(const ValueKey('city-detect')), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('hero-back')));
+    await settle();
+    expect(find.byKey(const ValueKey('lang-tg')), findsOneWidget);
+    expect(state.langChosen, isFalse);
+    expect(state.prefs.getString('lang'), isNull);
+
+    // Другой язык, затем ручной поиск и системный «Назад»: сначала к первому шагу, потом к языкам.
+    await tester.tap(find.byKey(const ValueKey('lang-tg')));
+    await settle();
+    expect(state.lang, 'tg');
+    await tester.tap(find.byKey(const ValueKey('city-manual')));
+    await settle();
+    expect(find.byKey(const ValueKey('city-search')), findsOneWidget);
+    await tester.binding.handlePopRoute();
+    await settle();
+    expect(find.byKey(const ValueKey('city-detect')), findsOneWidget);
+    await tester.binding.handlePopRoute();
+    await settle();
+    expect(find.byKey(const ValueKey('lang-ru')), findsOneWidget);
+    await stop(tester);
+  }, timeout: const Timeout(Duration(seconds: 25)));
+
   testWidgets('отказ в геолокации ведёт к ручному выбору с пояснением', (tester) async {
     final loc = FakeLocation(const LocationOutcome(LocationStatus.denied));
     final state = await makeState(location: loc);

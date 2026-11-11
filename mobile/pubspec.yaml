@@ -4,9 +4,10 @@ publish_to: "none"
 version: 0.1.0+1
 
 environment:
-  # Dart 3.4 / Flutter 3.22: в теме используются WidgetState*, а не устаревшие MaterialState*.
-  sdk: ">=3.4.0 <4.0.0"
-  flutter: ">=3.22.0"
+  # Dart 3.5 / Flutter 3.24: в теме используются WidgetState*, а на первом запуске —
+  # PopScope.onPopInvokedWithResult (появился в 3.24).
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ">=3.24.0"
 
 dependencies:
   flutter:

@@ -76,6 +76,17 @@ class _CityPickerScreenState extends State<CityPickerScreen> {
 
   void _skip() => context.app.skipCity();
 
+  void _onboardingBack() {
+    if (_step != _Step.choose) {
+      setState(() {
+        _message = null;
+        _step = _Step.choose;
+      });
+      return;
+    }
+    context.app.backToLanguage();
+  }
+
   void _onQuery(String q) {
     _debounce.run(() async {
       final seq = ++_seq;
@@ -141,8 +152,20 @@ class _CityPickerScreenState extends State<CityPickerScreen> {
           ),
         );
         if (onboarding) {
-          return Scaffold(
-            body: Column(children: [HeroHeader(icon: Icons.place, compact: compact), Expanded(child: body)]),
+          // Первый запуск: экран показывается вместо стека маршрутов (через RootGate), поэтому
+          // «Назад» по умолчанию закрыл бы приложение. Перехватываем: сначала возвращаемся к
+          // первому шагу выбора города, затем — к выбору языка.
+          return PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didPop, _) {
+              if (!didPop) _onboardingBack();
+            },
+            child: Scaffold(
+              body: Column(children: [
+                HeroHeader(icon: Icons.place, compact: compact, onBack: _onboardingBack, backLabel: app.t('common.back')),
+                Expanded(child: body),
+              ]),
+            ),
           );
         }
         return Scaffold(appBar: SectionAppBar(title: app.t('city.change')), body: body);

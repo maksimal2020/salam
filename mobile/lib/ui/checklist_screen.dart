@@ -133,22 +133,27 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
     final profile = app.profile;
     return [
       Row(children: [
-        OutlinedButton(
-          key: const ValueKey('list-edit'),
-          style: OutlinedButton.styleFrom(minimumSize: const Size(0, 48)),
-          onPressed: () => setState(() => _editing = true),
-          child: Text(app.t('list.edit')),
+        Expanded(
+          child: OutlinedButton(
+            key: const ValueKey('list-edit'),
+            style: OutlinedButton.styleFrom(minimumSize: const Size(0, 48)),
+            onPressed: () => setState(() => _editing = true),
+            child: Text(app.t('list.edit'), overflow: TextOverflow.ellipsis, maxLines: 1),
+          ),
         ),
         const SizedBox(width: 8),
-        TextButton(
-          onPressed: () {
-            app.setProfile(const Profile());
-            setState(() {
-              _draft = const Profile();
-              _editing = true;
-            });
-          },
-          child: Text(app.t('list.reset')),
+        Expanded(
+          child: TextButton(
+            style: TextButton.styleFrom(minimumSize: const Size(0, 48)),
+            onPressed: () {
+              app.setProfile(const Profile());
+              setState(() {
+                _draft = const Profile();
+                _editing = true;
+              });
+            },
+            child: Text(app.t('list.reset'), overflow: TextOverflow.ellipsis, maxLines: 1),
+          ),
         ),
       ]),
       const SizedBox(height: 8),

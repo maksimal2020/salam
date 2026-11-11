@@ -58,6 +58,14 @@ jobs:
         with:
           name: salam-debug-apk
           path: mobile/build/app/outputs/flutter-apk/app-debug.apk
+      # Быстрая сборка для установки на телефон, смотрит на боевой сервер.
+      # Подписана отладочным ключом из шаблона Flutter: для ручной установки этого
+      # достаточно, для RuStore/Google Play понадобится собственный ключ подписи.
+      - run: flutter build apk --release --dart-define=API_BASE_URL=https://app.salam-app.ru
+      - uses: actions/upload-artifact@v4
+        with:
+          name: salam-release-apk
+          path: mobile/build/app/outputs/flutter-apk/app-release.apk
 
   flutter-ios:
     name: Приложение (iOS, сборка без подписи)

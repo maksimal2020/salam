@@ -174,11 +174,15 @@ class SectionScaffold extends StatelessWidget {
 
 /// Крупная шапка с белым кругом и значком: для первого запуска (выбор города).
 class HeroHeader extends StatelessWidget {
-  const HeroHeader({super.key, required this.icon, this.compact = false});
+  const HeroHeader({super.key, required this.icon, this.compact = false, this.onBack, this.backLabel});
   final IconData icon;
 
   /// Низкий экран или открытая клавиатура: круг меньше, отступы короче.
   final bool compact;
+
+  /// Если задано — слева вверху появляется кнопка «Назад» (белый круг со стрелкой, как в шапках разделов).
+  final VoidCallback? onBack;
+  final String? backLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -208,6 +212,23 @@ class HeroHeader extends StatelessWidget {
                 ),
               ),
             ),
+            if (onBack != null)
+              PositionedDirectional(
+                top: top + 8,
+                start: 12,
+                child: Material(
+                  color: Colors.white,
+                  shape: const CircleBorder(),
+                  child: IconButton(
+                    key: const ValueKey('hero-back'),
+                    tooltip: backLabel,
+                    constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+                    icon: const BackButtonIcon(),
+                    color: Palette.ink,
+                    onPressed: onBack,
+                  ),
+                ),
+              ),
             const Positioned(left: 0, right: 0, bottom: 0, child: SheetCap()),
           ],
         ),
