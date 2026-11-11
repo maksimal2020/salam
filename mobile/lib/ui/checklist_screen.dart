@@ -251,56 +251,63 @@ class _StepState extends State<_Step> {
       key: ValueKey('step-${item.id}'),
       outlined: done,
       dashed: item.status != 'verified',
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Checkbox(
-            key: ValueKey('mark-${item.id}'),
-            value: done,
-            onChanged: (_) => app.toggleMark(item.id),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                InkWell(
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => DocScreen(id: item.id))),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: Text(item.title,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(decoration: done ? TextDecoration.lineThrough : null)),
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Badges([Necessity(item.necessity), Stamp(status: item.status)]),
-                const SizedBox(height: 6),
-                Text(item.summary, style: Theme.of(context).textTheme.bodySmall),
-                TextButton(
-                  key: ValueKey('step-toggle-${item.id}'),
-                  onPressed: () => setState(() => _open = !_open),
-                  child: Text(app.t(_open ? 'list.hideDetails' : 'list.showDetails')),
-                ),
-                if (_open)
-                  Padding(
-                    key: ValueKey('step-details-${item.id}'),
-                    padding: const EdgeInsets.only(top: 4, bottom: 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Divider(height: 1),
-                        const SizedBox(height: 8),
-                        DocProcedure(id: item.id),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8, bottom: 4),
-                          child: Text(app.t('docs.whereButton'), style: Theme.of(context).textTheme.titleMedium),
-                        ),
-                        DocPlaces(id: item.id, showDocTitle: false),
-                      ],
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Checkbox(
+                key: ValueKey('mark-${item.id}'),
+                value: done,
+                onChanged: (_) => app.toggleMark(item.id),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InkWell(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => DocScreen(id: item.id))),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 12),
+                        child: Text(item.title,
+                            style: Theme.of(context).textTheme.titleSmall?.copyWith(decoration: done ? TextDecoration.lineThrough : null)),
+                      ),
                     ),
-                  ),
-              ],
-            ),
+                    const SizedBox(height: 6),
+                    Badges([Necessity(item.necessity), Stamp(status: item.status)]),
+                    const SizedBox(height: 6),
+                    Text(item.summary, style: Theme.of(context).textTheme.bodySmall),
+                    TextButton(
+                      key: ValueKey('step-toggle-${item.id}'),
+                      onPressed: () => setState(() => _open = !_open),
+                      child: Text(app.t(_open ? 'list.hideDetails' : 'list.showDetails')),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
+          // Подробности — на всю ширину карточки, а не в узкой колонке справа от галочки:
+          // иначе вложенные адреса учреждений сжимаются так, что слова рвутся посередине.
+          if (_open)
+            Padding(
+              key: ValueKey('step-details-${item.id}'),
+              padding: const EdgeInsets.only(top: 4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Divider(height: 1),
+                  const SizedBox(height: 4),
+                  DocProcedure(id: item.id, embedded: true),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, bottom: 8),
+                    child: Text(app.t('docs.whereButton'), style: Theme.of(context).textTheme.titleMedium),
+                  ),
+                  DocPlaces(id: item.id, showDocTitle: false, nested: true),
+                ],
+              ),
+            ),
         ],
       ),
     );

@@ -48,8 +48,11 @@ class DocScreen extends StatelessWidget {
 /// с собственной загрузкой по id — так её можно показать и на отдельном экране, и встроенной прямо
 /// в карточку шага «Моего списка», без перехода на другой экран.
 class DocProcedure extends StatelessWidget {
-  const DocProcedure({super.key, required this.id});
+  const DocProcedure({super.key, required this.id, this.embedded = false});
   final String id;
+
+  /// Встроено в карточку шага «Моего списка»: название и плашки там уже показаны выше.
+  final bool embedded;
 
   @override
   Widget build(BuildContext context) {
@@ -57,14 +60,15 @@ class DocProcedure extends StatelessWidget {
     return Async<DocFull>(
       cacheKey: '$id|${app.lang}',
       load: () async => DocFull.fromJson(await app.api.get('/documents/$id', query: {'lang': app.lang}, cache: true)),
-      builder: (context, d, reload) => DocBody(doc: d),
+      builder: (context, d, reload) => DocBody(doc: d, embedded: embedded),
     );
   }
 }
 
 class DocBody extends StatelessWidget {
-  const DocBody({super.key, required this.doc});
+  const DocBody({super.key, required this.doc, this.embedded = false});
   final DocFull doc;
+  final bool embedded;
 
   Widget _h(BuildContext context, String text) => Padding(
         padding: const EdgeInsets.only(top: 16, bottom: 4),
@@ -79,13 +83,14 @@ class DocBody extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(b.title, style: Theme.of(context).textTheme.headlineSmall),
-        const SizedBox(height: 8),
-        Badges([Necessity(b.necessity), Stamp(status: b.status)]),
+        if (!embedded) ...[
+          Text(b.title, style: Theme.of(context).textTheme.headlineSmall),
+          const SizedBox(height: 8),
+          Badges([Necessity(b.necessity), Stamp(status: b.status)]),
+        ],
         if (b.status == 'demo') Notice(demo: true, child: Text(app.t('docs.demoWarning'), key: const ValueKey('demo-warning'))),
         if (d.detailsFallback) Notice(child: Text(app.t('docs.fallbackNote'))),
-        _h(context, app.t('docs.purpose')),
-        Text(b.summary),
+        if (!embedded) ...[_h(context, app.t('docs.purpose')), Text(b.summary)],
         if (d.details.who != null) ...[_h(context, app.t('docs.who')), Text(d.details.who!)],
         if (d.details.prepare.isNotEmpty) ...[
           _h(context, app.t('docs.prepare')),
@@ -106,7 +111,7 @@ class DocBody extends StatelessWidget {
         if (d.cost != null) ...[_h(context, app.t('docs.cost')), Text(d.cost![app.lang] ?? d.cost!['ru'] ?? '')],
         _h(context, app.t('docs.sources')),
         SourceList(sources: d.sources, checkedAt: b.checkedAt),
-        const SizedBox(height: 24),
+        SizedBox(height: embedded ? 8 : 24),
       ],
     );
   }
@@ -145,9 +150,12 @@ class DocWhereScreen extends StatelessWidget {
 /// экране «Где оформить», и встроенной прямо в карточку шага «Моего списка» (там город уже
 /// выбирается отдельной кнопкой, поэтому [showDocTitle] позволяет не повторять название документа).
 class DocPlaces extends StatelessWidget {
-  const DocPlaces({super.key, required this.id, this.showDocTitle = true});
+  const DocPlaces({super.key, required this.id, this.showDocTitle = true, this.nested = false});
   final String id;
   final bool showDocTitle;
+
+  /// Внутри другой карточки: учреждения рисуются облегчёнными блоками (см. [InstitutionCard.nested]).
+  final bool nested;
 
   @override
   Widget build(BuildContext context) {
@@ -174,16 +182,17 @@ class DocPlaces extends StatelessWidget {
             'district': app.district,
             'citizenship': app.profile.citizenship,
           })),
-      builder: (context, d, reload) => _WhereBody(places: d, cityName: city.name, showDocTitle: showDocTitle),
+      builder: (context, d, reload) => _WhereBody(places: d, cityName: city.name, showDocTitle: showDocTitle, nested: nested),
     );
   }
 }
 
 class _WhereBody extends StatelessWidget {
-  const _WhereBody({required this.places, required this.cityName, this.showDocTitle = true});
+  const _WhereBody({required this.places, required this.cityName, this.showDocTitle = true, this.nested = false});
   final Places places;
   final String cityName;
   final bool showDocTitle;
+  final bool nested;
 
   @override
   Widget build(BuildContext context) {
@@ -208,7 +217,7 @@ class _WhereBody extends StatelessWidget {
           if (d.institutions.isEmpty && !(d.needsDistrict && app.district == null))
             NoPlaces(cityName: cityName, officialSearch: d.officialSearch, sources: d.sources),
           if (d.institutions.isEmpty && d.needsDistrict && app.district == null) EmptyNote(app.t('where.none', {'city': cityName})),
-          for (final i in d.institutions) InstitutionCard(key: ValueKey('inst-${i.id}'), inst: i),
+          for (final i in d.institutions) InstitutionCard(key: ValueKey('inst-${i.id}'), inst: i, nested: nested),
         ],
       ],
     );

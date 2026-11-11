@@ -476,8 +476,13 @@ String _fmtKm(double km) {
 }
 
 class InstitutionCard extends StatelessWidget {
-  const InstitutionCard({super.key, required this.inst});
+  const InstitutionCard({super.key, required this.inst, this.nested = false});
   final Institution inst;
+
+  /// Карточка стоит внутри другой карточки (шаг «Моего списка»): тёплая подложка вместо
+  /// второй белой карточки с тенью, без крупной плитки-значка и с меньшими отступами —
+  /// чтобы на узком телефоне названию и адресу хватало ширины.
+  final bool nested;
 
   @override
   Widget build(BuildContext context) {
@@ -490,27 +495,27 @@ class InstitutionCard extends StatelessWidget {
       return s.districts != null ? '$c: ${s.districts!.join(', ')}' : c;
     }).toList();
 
-    return AppCard(
-      dashed: inst.status != 'verified',
-      child: Column(
+    final heading = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SourceLabel(app.t('badge.official'), Icons.shield_outlined),
+        Text(inst.name, style: Theme.of(context).textTheme.titleMedium),
+      ],
+    );
+    final content = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const IconTile(Icons.account_balance_outlined, size: 48),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SourceLabel(app.t('badge.official'), Icons.shield_outlined),
-                    Text(inst.name, style: Theme.of(context).textTheme.titleMedium),
-                  ],
-                ),
-              ),
-            ],
-          ),
+          if (nested)
+            heading
+          else
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const IconTile(Icons.account_balance_outlined, size: 48),
+                const SizedBox(width: 14),
+                Expanded(child: heading),
+              ],
+            ),
           const SizedBox(height: 12),
           Badges([
             Stamp(status: inst.status),
@@ -571,8 +576,16 @@ class InstitutionCard extends StatelessWidget {
           const SizedBox(height: 12),
           SourceList(sources: inst.sources, checkedAt: inst.checkedAt),
         ],
-      ),
+      );
+
+    if (!nested) return AppCard(dashed: inst.status != 'verified', child: content);
+
+    Widget block = DecoratedBox(
+      decoration: BoxDecoration(color: Palette.bg, borderRadius: BorderRadius.circular(20), border: Border.all(color: Palette.line)),
+      child: Padding(padding: const EdgeInsets.all(14), child: content),
     );
+    if (inst.status != 'verified') block = DashedBorder(color: Palette.demoLine, radius: 20, child: block);
+    return Padding(padding: const EdgeInsets.only(bottom: 12), child: block);
   }
 }
 
