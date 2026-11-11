@@ -37,6 +37,12 @@ jobs:
         working-directory: mobile
     steps:
       - uses: actions/checkout@v4
+      # Android lint из актуального AGP вызывает List.removeLast() — это Java 21; на
+      # Java 17 по умолчанию release-сборка падает в :lintVitalAnalyzeRelease.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
