@@ -48,7 +48,9 @@ class BrandIcon extends StatelessWidget {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(size * 24 / 88),
-            child: Image.asset('assets/brand/icon.png', width: size, height: size, cacheWidth: 384),
+            // 384×384: крупнее приложение иконку не рисует. Оригинал 1024 (assets/brand/icon.png) —
+            // только для flutter_launcher_icons, в сборку не входит.
+            child: Image.asset('assets/brand/icon_384.png', width: size, height: size, cacheWidth: 384),
           ),
         ),
       );

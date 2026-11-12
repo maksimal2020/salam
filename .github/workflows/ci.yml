@@ -48,6 +48,11 @@ jobs:
           channel: stable
           cache: true
       - run: flutter --version
+      # Шрифты Inter урезаны (tool/subset_fonts.py): все знаки из i18n, content и lib должны в них быть.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install fonttools && python3 tool/subset_fonts.py check
       # Папки android/ и ios/ в репозитории нет: их создаёт flutter create, не трогая lib/, test/ и pubspec.yaml.
       - run: flutter create --platforms=android,ios --org ru.example --project-name migrant_guide .
       # flutter create кладёт шаблонный test/widget_test.dart (ссылается на MyApp) — он нашему приложению не нужен.
@@ -64,14 +69,27 @@ jobs:
         with:
           name: salam-debug-apk
           path: mobile/build/app/outputs/flutter-apk/app-debug.apk
-      # Быстрая сборка для установки на телефон, смотрит на боевой сервер.
+      # Сборка для установки на телефон, смотрит на боевой сервер. Отдельный APK на каждый тип
+      # процессора (arm64 — почти все телефоны, armeabi-v7a — старые и бюджетные), без x86_64
+      # (только эмуляторы). Символы Dart вынесены из APK (--split-debug-info) — они нужны лишь
+      # для расшифровки стеков сбоев, хранятся отдельным артефактом.
       # Подписана отладочным ключом из шаблона Flutter: для ручной установки этого
       # достаточно, для RuStore/Google Play понадобится собственный ключ подписи.
-      - run: flutter build apk --release --dart-define=API_BASE_URL=https://app.salam-app.ru
+      - run: >-
+          flutter build apk --release --split-per-abi --target-platform android-arm,android-arm64
+          --obfuscate --split-debug-info=build/symbols
+          --dart-define=API_BASE_URL=https://app.salam-app.ru
+      - run: ls -la build/app/outputs/flutter-apk/
       - uses: actions/upload-artifact@v4
         with:
           name: salam-release-apk
-          path: mobile/build/app/outputs/flutter-apk/app-release.apk
+          path: |
+            mobile/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+            mobile/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: salam-release-symbols
+          path: mobile/build/symbols/
 
   flutter-ios:
     name: Приложение (iOS, сборка без подписи)

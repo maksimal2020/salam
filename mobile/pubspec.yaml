@@ -30,11 +30,14 @@ flutter:
   assets:
     # Копии content/i18n: запасные тексты, пока нет связи с сервером. Обновляются tool/sync_i18n.sh.
     - assets/i18n/
-    # Знак «S!» для шапки и первого экрана. Исходники SVG и остальные PNG (иконки) в приложение не входят.
-    - assets/brand/icon.png
+    # Знак «S!» для шапки и первого экрана. Исходники SVG и остальные PNG (иконки, icon.png 1024×1024
+    # для flutter_launcher_icons) в приложение не входят.
+    - assets/brand/icon_384.png
     - assets/brand/mark_color.png
   fonts:
-    # Inter (SIL OFL 1.1, лицензия рядом в assets/fonts). Покрывает кириллицу, ғ ӣ қ ӯ ҳ ҷ ү ө ң и oʻ — проверено по всем строкам i18n.
+    # Inter (SIL OFL 1.1, лицензия рядом в assets/fonts), урезанный до латиницы, кириллицы
+    # (ғ ӣ қ ӯ ҳ ҷ ү ө ң ә і), oʻ и типографики: tool/subset_fonts.py. Проверка покрытия всех
+    # текстов i18n и content — `python3 tool/subset_fonts.py check` (шаг CI).
     - family: Inter
       fonts:
         - asset: assets/fonts/Inter-Regular.otf
