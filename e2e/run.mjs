@@ -347,8 +347,17 @@ async function run() {
 
   await scenario('Где оформить: документ без учреждения объясняет, что учреждения нет', async () => {
     const { page } = await newCtx({}, { ...ready, city: CITY.moscow });
-    await page.goto('/docs/bank_account/where');
+    await page.goto('/docs/health_insurance/where');
     await page.getByTestId('no-institution').waitFor();
+  });
+
+  await scenario('Где оформить: банковская карта — отделения банков из реестра ЦБ и Т-Банк онлайн', async () => {
+    const { page } = await newCtx({}, { ...ready, city: CITY.moscow });
+    await page.goto('/docs/bank_account/where');
+    await page.locator('[data-id^=bank_vtb_moscow_]').first().waitFor();
+    assert.ok(await page.locator('[data-id=bank_tbank_online]').count(), 'Т-Банк онлайн показан во всех городах');
+    // Сбер и Альфа собраны черновиками, пока на их сайтах не подтверждены условия для иностранцев.
+    assert.equal(await page.locator('[data-id^=bank_sber_], [data-id^=bank_alfa_]').count(), 0);
   });
 
   await scenario('Где оформить: раздел «Где оформить» — фильтры по услуге и формату, смена города', async () => {
@@ -365,11 +374,11 @@ async function run() {
     await page.getByTestId('city-chip').click();
     await page.getByTestId('city-manual').click();
     await pickCityManual(page, 'Казань', 'kazan');
-    // Портал Госуслуг обслуживает всю страну (serves: scope country), поэтому для Казани
-    // в режиме «онлайн» он остаётся единственным результатом — не «нет адресов». (gosuslugi_notification
-    // matches the stale Moscow list too, so wait for the count to actually settle at 1, not just for it to appear.)
-    await page.waitForFunction(() => document.querySelectorAll('[data-testid=institution]').length === 1);
-    assert.deepEqual(await ids(page, '[data-testid=institution]'), ['gosuslugi_notification']);
+    // Портал Госуслуг и Т-Банк (заявка на карту онлайн) обслуживают всю страну (serves: scope country),
+    // поэтому для Казани в режиме «онлайн» остаются именно они — не «нет адресов». (Оба есть и в старом
+    // московском списке, поэтому ждём, пока число карточек уляжется на 2, а не просто их появления.)
+    await page.waitForFunction(() => document.querySelectorAll('[data-testid=institution]').length === 2);
+    assert.deepEqual((await ids(page, '[data-testid=institution]')).sort(), ['bank_tbank_online', 'gosuslugi_notification']);
   });
 
   // ---- 4. tips and the city filter

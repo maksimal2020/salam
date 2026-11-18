@@ -6,52 +6,54 @@
 
 | Группа | Цель | Этап | Утерян документ | Шагов | Проверено | Демо | К уточнению | Статус |
 |---|---|---|---|---|---|---|---|---|
-| eaeu | work | before | нет | 2 | 0 | 2 | 0 | 🟠 демо |
-| eaeu | work | in_russia | нет | 7 | 0 | 7 | 0 | 🟠 демо |
-| eaeu | study | before | нет | 3 | 0 | 3 | 0 | 🟠 демо |
-| eaeu | study | in_russia | нет | 5 | 0 | 5 | 0 | 🟠 демо |
-| eaeu | private | before | нет | 2 | 0 | 2 | 0 | 🟠 демо |
-| eaeu | private | in_russia | нет | 4 | 0 | 4 | 0 | 🟠 демо |
-| eaeu | tourism | before | нет | 2 | 0 | 2 | 0 | 🟠 демо |
-| eaeu | tourism | in_russia | нет | 2 | 0 | 2 | 0 | 🟠 демо |
-| eaeu | work | in_russia | да | 9 | 0 | 9 | 0 | 🟠 демо |
-| visa_free | work | before | нет | 2 | 0 | 2 | 0 | 🟠 демо |
-| visa_free | work | in_russia | нет | 9 | 0 | 9 | 0 | 🟠 демо |
-| visa_free | study | before | нет | 3 | 0 | 3 | 0 | 🟠 демо |
-| visa_free | study | in_russia | нет | 5 | 0 | 5 | 0 | 🟠 демо |
-| visa_free | private | before | нет | 2 | 0 | 2 | 0 | 🟠 демо |
-| visa_free | private | in_russia | нет | 4 | 0 | 4 | 0 | 🟠 демо |
-| visa_free | tourism | before | нет | 2 | 0 | 2 | 0 | 🟠 демо |
-| visa_free | tourism | in_russia | нет | 2 | 0 | 2 | 0 | 🟠 демо |
-| visa_free | work | in_russia | да | 11 | 0 | 11 | 0 | 🟠 демо |
-| other | work | before | нет | 2 | 0 | 2 | 0 | 🟠 демо |
-| other | work | in_russia | нет | 6 | 0 | 6 | 4 | 🟠 демо |
-| other | study | before | нет | 3 | 0 | 3 | 0 | 🟠 демо |
-| other | study | in_russia | нет | 5 | 0 | 5 | 0 | 🟠 демо |
-| other | private | before | нет | 2 | 0 | 2 | 0 | 🟠 демо |
-| other | private | in_russia | нет | 4 | 0 | 4 | 0 | 🟠 демо |
-| other | tourism | before | нет | 2 | 0 | 2 | 0 | 🟠 демо |
-| other | tourism | in_russia | нет | 2 | 0 | 2 | 0 | 🟠 демо |
-| other | work | in_russia | да | 8 | 0 | 8 | 4 | 🟠 демо |
+| eaeu | work | before | нет | 3 | 3 | 0 | 0 | ✅ проверено |
+| eaeu | work | in_russia | нет | 8 | 8 | 0 | 0 | ✅ проверено |
+| eaeu | study | before | нет | 4 | 4 | 0 | 0 | ✅ проверено |
+| eaeu | study | in_russia | нет | 5 | 5 | 0 | 0 | ✅ проверено |
+| eaeu | private | before | нет | 3 | 3 | 0 | 0 | ✅ проверено |
+| eaeu | private | in_russia | нет | 4 | 4 | 0 | 0 | ✅ проверено |
+| eaeu | tourism | before | нет | 3 | 3 | 0 | 0 | ✅ проверено |
+| eaeu | tourism | in_russia | нет | 2 | 2 | 0 | 0 | ✅ проверено |
+| eaeu | work | in_russia | да | 10 | 10 | 0 | 0 | ✅ проверено |
+| visa_free | work | before | нет | 2 | 2 | 0 | 0 | ✅ проверено |
+| visa_free | work | in_russia | нет | 9 | 9 | 0 | 0 | ✅ проверено |
+| visa_free | study | before | нет | 3 | 3 | 0 | 0 | ✅ проверено |
+| visa_free | study | in_russia | нет | 5 | 5 | 0 | 0 | ✅ проверено |
+| visa_free | private | before | нет | 2 | 2 | 0 | 0 | ✅ проверено |
+| visa_free | private | in_russia | нет | 4 | 4 | 0 | 0 | ✅ проверено |
+| visa_free | tourism | before | нет | 2 | 2 | 0 | 0 | ✅ проверено |
+| visa_free | tourism | in_russia | нет | 2 | 2 | 0 | 0 | ✅ проверено |
+| visa_free | work | in_russia | да | 11 | 11 | 0 | 0 | ✅ проверено |
+| other | work | before | нет | 2 | 2 | 0 | 1 | 🟡 частично |
+| other | work | in_russia | нет | 6 | 6 | 0 | 4 | 🟡 частично |
+| other | study | before | нет | 3 | 3 | 0 | 1 | 🟡 частично |
+| other | study | in_russia | нет | 5 | 5 | 0 | 0 | ✅ проверено |
+| other | private | before | нет | 2 | 2 | 0 | 1 | 🟡 частично |
+| other | private | in_russia | нет | 4 | 4 | 0 | 0 | ✅ проверено |
+| other | tourism | before | нет | 2 | 2 | 0 | 1 | 🟡 частично |
+| other | tourism | in_russia | нет | 2 | 2 | 0 | 0 | ✅ проверено |
+| other | work | in_russia | да | 8 | 8 | 0 | 4 | 🟡 частично |
 
 ## Учреждения по документам и городам
 
-| Документ | Москва |
-|---|---|
-| passport_valid (без учреждения) | n/a |
-| entry_documents (без учреждения) | n/a |
-| migration_registration | 🟠 демо |
-| work_right_eaeu (без учреждения) | n/a |
-| patent | 🟠 демо |
-| russian_exam | 🟠 демо |
-| medical_exam | 🟠 демо |
-| health_insurance (без учреждения) | n/a |
-| employment_documents (без учреждения) | n/a |
-| study_enrollment (без учреждения) | n/a |
-| inn | 🟠 демо |
-| snils | 🟠 демо |
-| bank_account (без учреждения) | n/a |
-| lost_passport | 🟠 демо |
-| lost_migration_docs | 🟠 демо |
+| Документ | Балашиха | Владивосток | Волгоград | Воронеж | Дубна | Екатеринбург | Железногорск | Железногорск | Заречный | Заречный | Иркутск | Казань | Калининград | Королёв | Котельники | Красногорск | Краснодар | Красноярск | Люберцы | Махачкала | Москва | Мурманск | Мытищи | Нижний Новгород | Новосибирск | Одинцово | Омск | Пермь | Подольск | Ростов-на-Дону | Самара | Санкт-Петербург | Саратов | Советск | Советск | Сочи | Ставрополь | Тула | Тюмень | Уфа | Хабаровск | Химки | Челябинск | Ярославль |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| passport_valid (без учреждения) | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| entry_documents (без учреждения) | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| ruid_declaration (без учреждения) | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| migration_registration | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| work_right_eaeu (без учреждения) | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| patent | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | ✅ | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
+| russian_exam | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | ✅ | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
+| medical_exam | ✅ | — | — | — | ✅ | — | — | — | — | — | — | — | — | ✅ | — | ✅ | — | — | ✅ | — | ✅ | — | ✅ | — | — | ✅ | — | — | ✅ | — | — | — | — | — | — | — | — | — | — | — | — | ✅ | — | — |
+| health_insurance (без учреждения) | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| employment_documents (без учреждения) | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| study_enrollment (без учреждения) | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a |
+| inn | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | ✅ | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
+| snils | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | ✅ | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
+| bank_account | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| lost_passport | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| lost_migration_docs | ✅ | — | — | — | ✅ | — | — | — | — | — | — | — | — | ✅ | — | ✅ | — | — | ✅ | — | ✅ | — | ✅ | — | — | ✅ | — | — | ✅ | — | — | — | — | — | — | — | — | — | — | — | — | ✅ | — | — |
+| eaeu_residence_permit | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
 
-Ещё 42 городов в справочнике без единой записи об учреждении.
+Ещё 0 городов в справочнике без единой записи об учреждении.

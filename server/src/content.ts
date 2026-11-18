@@ -53,6 +53,8 @@ export function loadContent(dirs: string[]): Content {
     c.cities = mergeById(c.cities, readJson(path.join(dir, 'cities.json')));
     c.documents = mergeById(c.documents, readJson(path.join(dir, 'catalog', 'documents.json')));
     c.institutions = mergeById(c.institutions, readJson(path.join(dir, 'institutions.json')));
+    // Отделения банков собираются скриптом tools/banks/build_banks.py из реестра Банка России.
+    c.institutions = mergeById(c.institutions, readJson(path.join(dir, 'banks.json')));
     c.tips = mergeById(c.tips, readJson(path.join(dir, 'tips.json')));
     const mod = readJson(path.join(dir, 'moderation.json'));
     if (mod) c.moderation = { ...c.moderation, ...mod };

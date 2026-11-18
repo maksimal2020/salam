@@ -211,6 +211,21 @@ test('places: embassies are filtered by citizenship', async () => {
   assert.deepEqual(tj, ['emb_tj']);
 });
 
+test('places: bank card — bank offices from the CBR registry, T-Bank online everywhere, drafts hidden', async () => {
+  for (const city of ['moscow', 'kazan', 'vladivostok']) {
+    const list = (await places('bank_account', `city=${city}`)).institutions;
+    const ids = list.map((i: any) => i.id);
+    assert.ok(ids.some((id: string) => id.startsWith(`bank_vtb_${city}_`)), `${city}: ВТБ`);
+    assert.ok(ids.includes('bank_tbank_online'), `${city}: Т-Банк онлайн`);
+    assert.ok(!ids.some((id: string) => /^bank_(sber|alfa)_/.test(id)), `${city}: черновики не показываются`);
+    assert.ok(list.filter((i: any) => i.id.startsWith('bank_vtb_')).length <= 3, `${city}: не больше трёх отделений банка`);
+  }
+  const vtb = (await places('bank_account', 'city=moscow')).institutions.find((i: any) => i.id.startsWith('bank_vtb_moscow_'));
+  assert.ok(vtb.address.startsWith('г. Москва') || vtb.address.startsWith('город Москва'), vtb.address);
+  assert.ok(vtb.sources.some((s: any) => s.url.startsWith('https://www.cbr.ru/')), 'адрес из реестра ЦБ');
+  assert.ok(vtb.sources.some((s: any) => s.url.startsWith('https://www.vtb.ru/')), 'страница банка для иностранцев');
+});
+
 test('institutions list supports service and mode filters', async () => {
   const r = (await get('/institutions?city=moscow&service=inn&lang=ru')).json;
   assert.ok(r.institutions.every((i: any) => i.services.some((s: any) => s.id === 'inn')));
