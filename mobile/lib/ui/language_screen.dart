@@ -22,7 +22,10 @@ class LanguageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final app = context.app;
     final text = Theme.of(context).textTheme;
-    return Scaffold(
+    // Сюда приходят и при первом запуске, и по логотипу в шапке. Во втором случае «Назад»
+    // (кнопка и системный жест) возвращает на главный экран; при первом — закрывает приложение.
+    final canReturn = app.restarting;
+    final screen = Scaffold(
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -33,6 +36,18 @@ class LanguageScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  if (canReturn)
+                    Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: IconButton(
+                        key: const ValueKey('lang-back'),
+                        tooltip: app.t('common.back'),
+                        style: IconButton.styleFrom(backgroundColor: Colors.white, minimumSize: const Size(48, 48)),
+                        icon: const BackButtonIcon(),
+                        color: Palette.ink,
+                        onPressed: app.cancelRestart,
+                      ),
+                    ),
                   const Padding(padding: EdgeInsets.only(top: 6, bottom: 18), child: Align(alignment: AlignmentDirectional.centerStart, child: BrandIcon())),
                   // Название одно для всех языков и показывается до загрузки переводов, поэтому не из словаря.
                   Text('Salam!', style: text.headlineLarge),
@@ -50,6 +65,14 @@ class LanguageScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+    if (!canReturn) return screen;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) app.cancelRestart();
+      },
+      child: screen,
     );
   }
 }

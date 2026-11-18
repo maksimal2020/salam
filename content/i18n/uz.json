@@ -1,5 +1,6 @@
 {
   "app.name": "Salam!",
+  "app.restart": "Boshidan boshlash: til va shahar",
   "app.tagline": "Rossiyada yashash va ishlash uchun hujjatlar, manzillar va maslahatlar",
   "nav.docs": "Hujjatlar",
   "nav.where": "Qayerda rasmiylashtirish",

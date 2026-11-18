@@ -208,16 +208,40 @@ class AppState extends ChangeNotifier {
     if (!kLangs.any((l) => l.code == code)) return;
     lang = code;
     langChosen = true;
+    // Повторный проход по логотипу: после языка — снова экран города, как при первом запуске.
+    // В настройках cityAsked не трогаем: закроют приложение на полпути — откроется главный экран.
+    if (restarting) cityAsked = false;
     await prefs.setString('lang', code);
     notifyListeners();
     await reloadTexts();
   }
 
+  /// Идёт повторный проход первого запуска (нажали логотип в шапке). С экрана языка тогда можно
+  /// вернуться на главный экран: ничего не стирается, пока человек не выберет новый язык и город.
+  bool restarting = false;
+
+  /// Логотип в шапке: заново пройти первый запуск — язык, затем город. Список шагов, отметки и вход не трогаем.
+  void restartOnboarding() {
+    restarting = true;
+    langChosen = false;
+    notifyListeners();
+  }
+
+  /// «Назад» на экране языка во время повторного прохода: вернуться как было.
+  /// Язык и город берутся из сохранённых настроек — если язык успели сменить, остаётся новый.
+  void cancelRestart() {
+    restarting = false;
+    langChosen = true;
+    cityAsked = true;
+    notifyListeners();
+  }
+
   /// Первый запуск: вернуться с экрана города к выбору языка (кнопка «Назад» и системный жест).
   /// Сохранённый выбор стирается, чтобы после перезапуска приложение тоже начиналось с языка.
+  /// При повторном проходе по логотипу язык остаётся сохранённым — выход назад ничего не теряет.
   Future<void> backToLanguage() async {
     langChosen = false;
-    await prefs.remove('lang');
+    if (!restarting) await prefs.remove('lang');
     notifyListeners();
   }
 
@@ -227,6 +251,7 @@ class AppState extends ChangeNotifier {
   void setCity(City? c) {
     city = c;
     cityAsked = true;
+    restarting = false;
     if (c == null) {
       prefs.remove('city');
     } else {
@@ -239,8 +264,10 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// «Выбрать позже». При повторном проходе по логотипу прежний город остаётся.
   void skipCity() {
     cityAsked = true;
+    restarting = false;
     prefs.setBool('cityAsked', true);
     notifyListeners();
   }

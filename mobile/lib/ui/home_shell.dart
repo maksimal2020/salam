@@ -60,20 +60,95 @@ class _HomeShellState extends State<HomeShell> {
               Expanded(child: IndexedStack(index: _index, children: _tabs)),
             ],
           ),
-          bottomNavigationBar: NavigationBar(
-            selectedIndex: _index,
-            onDestinationSelected: (i) => setState(() => _index = i),
-            destinations: [
-              NavigationDestination(key: const ValueKey('tab-docs'), icon: const Icon(Icons.description_outlined), selectedIcon: const Icon(Icons.description), label: app.t('nav.docs')),
-              NavigationDestination(key: const ValueKey('tab-where'), icon: const Icon(Icons.place_outlined), selectedIcon: const Icon(Icons.place), label: app.t('nav.where')),
-              NavigationDestination(key: const ValueKey('tab-tips'), icon: const Icon(Icons.lightbulb_outline), selectedIcon: const Icon(Icons.lightbulb), label: app.t('nav.tips')),
-              NavigationDestination(key: const ValueKey('tab-ads'), icon: const Icon(Icons.campaign_outlined), selectedIcon: const Icon(Icons.campaign), label: app.t('nav.ads')),
-            ],
-          ),
+          bottomNavigationBar: LayoutBuilder(builder: (context, constraints) {
+            final insets = MediaQuery.paddingOf(context);
+            final slot = (constraints.maxWidth - insets.left - insets.right) / 4;
+            final nav = NavigationBarTheme.of(context);
+            // В подсказке при долгом нажатии — слово без переноса.
+            final fit = fitNavLabels(context, [app.t('nav.docs'), app.t('nav.where'), app.t('nav.tips'), app.t('nav.ads')], slot);
+            return NavigationBarTheme(
+              data: nav.copyWith(labelTextStyle: WidgetStateProperty.resolveWith((s) => nav.labelTextStyle?.resolve(s)?.copyWith(fontSize: fit.size))),
+              child: NavigationBar(
+                selectedIndex: _index,
+                onDestinationSelected: (i) => setState(() => _index = i),
+                destinations: [
+                  NavigationDestination(key: const ValueKey('tab-docs'), icon: const Icon(Icons.description_outlined), selectedIcon: const Icon(Icons.description), label: fit.labels[0], tooltip: app.t('nav.docs')),
+                  NavigationDestination(key: const ValueKey('tab-where'), icon: const Icon(Icons.place_outlined), selectedIcon: const Icon(Icons.place), label: fit.labels[1], tooltip: app.t('nav.where')),
+                  NavigationDestination(key: const ValueKey('tab-tips'), icon: const Icon(Icons.lightbulb_outline), selectedIcon: const Icon(Icons.lightbulb), label: fit.labels[2], tooltip: app.t('nav.tips')),
+                  NavigationDestination(key: const ValueKey('tab-ads'), icon: const Icon(Icons.campaign_outlined), selectedIcon: const Icon(Icons.campaign), label: fit.labels[3], tooltip: app.t('nav.ads')),
+                ],
+              ),
+            );
+          }),
         ),
       ),
     );
   }
+}
+
+/// Самый мелкий шрифт подписи нижней панели с учётом системного масштаба: как подписи вкладок iOS.
+const double _kMinNavLabel = 10;
+
+/// Подписи нижней панели так, чтобы ни одно слово не рвалось посередине.
+///
+/// Material увеличивает подписи вместе с системным размером шрифта (не больше чем в 1,3 раза) и
+/// не ограничивает число строк. При крупном шрифте «Объявления» не влезало в четверть экрана и
+/// рвалось на «Объявлени / я». Здесь общий для всех четырёх подписей размер уменьшается ровно
+/// настолько, чтобы каждое слово встало в свою колонку целиком, — но не мельче [_kMinNavLabel].
+/// Слово, которое не влезает и так (казахское «Хабарландырулар» на узком экране), делится
+/// по слогам с дефисом. Двухсловные подписи («Где оформить») по-прежнему идут в две строки.
+({double size, List<String> labels}) fitNavLabels(BuildContext context, List<String> labels, double slotWidth) {
+  final style = NavigationBarTheme.of(context).labelTextStyle?.resolve({WidgetState.selected}) ?? const TextStyle(fontSize: 12.5);
+  final scaler = MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 1.3); // как внутри NavigationBar
+  final dir = Directionality.of(context);
+  final room = slotWidth - 8; // немного воздуха между соседними подписями
+
+  double width(String s, double size) {
+    final tp = TextPainter(text: TextSpan(text: s, style: style.copyWith(fontSize: size)), textDirection: dir, textScaler: scaler, maxLines: 1)
+      ..layout();
+    final w = tp.width;
+    tp.dispose();
+    return w;
+  }
+
+  final words = {for (final l in labels) ...l.split(' ')};
+  var size = style.fontSize ?? 12.5;
+  while (words.any((w) => width(w, size) > room)) {
+    final next = size - 0.25;
+    if (scaler.scale(next) < _kMinNavLabel) break;
+    size = next;
+  }
+  String fitWord(String w) => width(w, size) <= room ? w : hyphenateNavWord(w, (part) => width(part, size) <= room);
+  return (size: size, labels: [for (final l in labels) l.split(' ').map(fitWord).join(' ')]);
+}
+
+const _vowels = 'аеёиоуыэюяәіөүұӯӣАЕЁИОУЫЭЮЯӘІӨҮҰӮӢaeiouAEIOU';
+
+/// Делит длинное слово дефисами на куски, каждый из которых (вместе с дефисом) проходит [fits].
+/// Место разрыва — как можно правее, по возможности после гласной перед согласной
+/// («Хабарланды-рулар»); в каждом куске не меньше трёх букв.
+String hyphenateNavWord(String word, bool Function(String part) fits) {
+  final out = <String>[];
+  var rest = word;
+  while (!fits(rest) && rest.length >= 6) {
+    int? best;
+    int? fallback;
+    for (var i = rest.length - 3; i >= 3; i--) {
+      if (!fits('${rest.substring(0, i)}-')) continue;
+      fallback ??= i;
+      if (_vowels.contains(rest[i - 1]) && !_vowels.contains(rest[i])) {
+        best = i;
+        break;
+      }
+    }
+    final cut = best ?? fallback;
+    if (cut == null) break;
+    out.add('${rest.substring(0, cut)}-');
+    rest = rest.substring(cut);
+  }
+  out.add(rest);
+  // Перенос строки допустим после дефиса — части встанут в разные строки сами.
+  return out.join();
 }
 
 /// Шапка: знак, язык, профиль и меню; город всегда на виду; крупный заголовок раздела.
@@ -106,10 +181,39 @@ class _HomeHeader extends StatelessWidget {
                     padding: const EdgeInsetsDirectional.fromSTEB(20, 6, 16, 0),
                     child: Row(
                       children: [
-                        const BrandTile(),
-                        const SizedBox(width: 10),
+                        // Знак с названием — одна кнопка: заново пройти первый запуск (язык, потом город).
                         Expanded(
-                          child: Text(app.t('app.name'), style: text.titleLarge?.copyWith(color: tone.onHeader, fontSize: 20, letterSpacing: -0.4)),
+                          child: Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Tooltip(
+                              message: app.t('app.restart'),
+                              excludeFromSemantics: true,
+                              child: Semantics(
+                                button: true,
+                                label: '${app.t('app.name')}. ${app.t('app.restart')}',
+                                excludeSemantics: true,
+                                onTap: app.restartOnboarding,
+                                child: Material(
+                                  type: MaterialType.transparency,
+                                  child: InkWell(
+                                    key: const ValueKey('logo-button'),
+                                    borderRadius: BorderRadius.circular(16),
+                                    onTap: app.restartOnboarding,
+                                    child: Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 8, 4),
+                                      child: Row(mainAxisSize: MainAxisSize.min, children: [
+                                        const BrandTile(),
+                                        const SizedBox(width: 10),
+                                        Flexible(
+                                          child: Text(app.t('app.name'), style: text.titleLarge?.copyWith(color: tone.onHeader, fontSize: 20, letterSpacing: -0.4)),
+                                        ),
+                                      ]),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                         _HeaderPill(
                           key: const ValueKey('lang-button'),
