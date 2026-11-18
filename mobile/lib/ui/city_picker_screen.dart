@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../api/models.dart';
 import '../state/app_scope.dart';
 import '../state/app_state.dart';
+import 'adaptive.dart';
 import 'brand.dart';
 import 'theme.dart';
 import 'widgets.dart';
@@ -163,12 +164,12 @@ class _CityPickerScreenState extends State<CityPickerScreen> {
             child: Scaffold(
               body: Column(children: [
                 HeroHeader(icon: Icons.place, compact: compact, onBack: _onboardingBack, backLabel: app.t('common.back')),
-                Expanded(child: body),
+                Expanded(child: ReadableWidth(child: body)),
               ]),
             ),
           );
         }
-        return Scaffold(appBar: SectionAppBar(title: app.t('city.change')), body: body);
+        return Scaffold(appBar: SectionAppBar(title: app.t('city.change')), body: ReadableWidth(child: body));
       }),
     );
   }

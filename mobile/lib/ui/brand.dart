@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'adaptive.dart';
 import 'theme.dart';
 
 /// Оборачивает экран в тему раздела: кнопки, поля, флажки и шапка берут его цвет.
@@ -167,7 +168,7 @@ class SectionScaffold extends StatelessWidget {
         child: Builder(
           builder: (context) => Scaffold(
             appBar: SectionAppBar(title: title),
-            body: SafeArea(top: false, child: body),
+            body: SafeArea(top: false, child: ReadableWidth(child: body)),
             bottomNavigationBar: bottom,
           ),
         ),

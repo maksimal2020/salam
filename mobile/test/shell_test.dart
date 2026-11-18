@@ -7,7 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:migrant_guide/app.dart';
 import 'package:migrant_guide/state/app_state.dart';
-import 'package:migrant_guide/ui/home_shell.dart';
+import 'package:migrant_guide/ui/app_nav.dart';
+import 'package:migrant_guide/ui/docs_screen.dart';
 
 import 'support.dart';
 
@@ -127,6 +128,53 @@ void main() {
       }
     }
   });
+
+  testWidgets('нижняя панель: значки на одной линии, подписи по центру под ними и выровнены по верху', (tester) async {
+    tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+    await _start(tester, await _returning());
+    const tabs = ['tab-docs', 'tab-where', 'tab-tips', 'tab-ads'];
+    final icons = [for (final t in tabs) tester.getCenter(find.descendant(of: find.byKey(ValueKey(t)), matching: find.byType(Icon)))];
+    final labels = [for (final t in tabs) find.descendant(of: find.byKey(ValueKey(t)), matching: find.byType(Text))];
+    for (var i = 0; i < tabs.length; i++) {
+      expect(icons[i].dy, moreOrLessEquals(icons[0].dy, epsilon: 0.5), reason: '${tabs[i]}: значок не на одной линии');
+      expect(tester.getTopLeft(labels[i]).dy, moreOrLessEquals(tester.getTopLeft(labels[0]).dy, epsilon: 0.5), reason: '${tabs[i]}: подпись не по верху');
+      // Каждая строка подписи центрирована под значком.
+      final p = tester.renderObject<RenderParagraph>(find.descendant(of: labels[i], matching: find.byType(RichText)));
+      final text = p.text.toPlainText();
+      final boxes = p.getBoxesForSelection(TextSelection(baseOffset: 0, extentOffset: text.length));
+      final origin = p.localToGlobal(Offset.zero);
+      final lines = <double, List<double>>{};
+      for (final b in boxes) {
+        (lines[b.top.roundToDouble()] ??= [double.infinity, double.negativeInfinity])
+          ..[0] = b.left < lines[b.top.roundToDouble()]![0] ? b.left : lines[b.top.roundToDouble()]![0]
+          ..[1] = b.right > lines[b.top.roundToDouble()]![1] ? b.right : lines[b.top.roundToDouble()]![1];
+      }
+      for (final l in lines.values) {
+        expect(origin.dx + (l[0] + l[1]) / 2, moreOrLessEquals(icons[i].dx, epsilon: 2), reason: '${tabs[i]}: «$text» не по центру');
+      }
+    }
+    expect(find.byType(AppBottomNav), findsOneWidget);
+    expect(find.byType(AppNavRail), findsNothing);
+    await _stop(tester);
+  }, timeout: const Timeout(Duration(seconds: 25)));
+
+  for (final c in [('планшет', const Size(2048, 1536), 2.0), ('телефон в альбомной ориентации', const Size(2340, 1080), 3.0)]) {
+    testWidgets('${c.$1}: боковая колонка вместо нижней панели, содержимое не шире 720', (tester) async {
+      tester.view.physicalSize = c.$2;
+      tester.view.devicePixelRatio = c.$3;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(MigrantGuideApp(state: await _returning()));
+      await _settle(tester);
+      expect(find.byType(AppNavRail), findsOneWidget);
+      expect(find.byType(AppBottomNav), findsNothing);
+      expect(tester.getSize(find.byType(DocsTab)).width, lessThanOrEqualTo(720));
+      // Разделы переключаются и из колонки.
+      await tester.tap(find.byKey(const ValueKey('tab-tips')));
+      await _settle(tester);
+      expect(find.byKey(const ValueKey('tab-tips')), findsOneWidget);
+      await _stop(tester);
+    }, timeout: const Timeout(Duration(seconds: 25)));
+  }
 
   test('перенос длинного слова: после гласной, куски не короче трёх букв', () {
     bool fits(String s) => s.length <= 11;

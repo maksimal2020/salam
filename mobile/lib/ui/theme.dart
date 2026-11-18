@@ -310,7 +310,9 @@ ThemeData buildTheme(Section section) {
         (s) => IconThemeData(color: s.contains(WidgetState.selected) ? t.accent : Palette.ink2, size: 26),
       ),
       labelTextStyle: WidgetStateProperty.resolveWith(
-        (s) => _s(12.5, s.contains(WidgetState.selected) ? FontWeight.w800 : FontWeight.w600, color: s.contains(WidgetState.selected) ? Palette.ink : Palette.ink2),
+        // Без разрядки и с плотным интервалом: подписи в две строки не расползаются, длинным словам больше места.
+        (s) => _s(12.5, s.contains(WidgetState.selected) ? FontWeight.w800 : FontWeight.w600,
+            color: s.contains(WidgetState.selected) ? Palette.ink : Palette.ink2, spacing: 0, height: 1.25),
       ),
     ),
     bottomSheetTheme: const BottomSheetThemeData(

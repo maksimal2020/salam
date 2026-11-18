@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 
 import '../state/app_scope.dart';
 import 'account_screens.dart';
+import 'adaptive.dart';
 import 'ads_screen.dart';
+import 'app_nav.dart';
 import 'brand.dart';
 import 'city_picker_screen.dart';
 import 'data_screen.dart';
@@ -39,11 +41,21 @@ class _HomeShellState extends State<HomeShell> {
     // Читается здесь, выше Scaffold: внутри него отступ клавиатуры уже учтён раскладкой.
     final keyboard = MediaQuery.viewInsetsOf(context).bottom > 0;
     final titles = [app.t('docs.title'), app.t('where.title'), app.t('tips.title'), app.t('ads.title')];
+    final destinations = [
+      AppNavDestination(key: const ValueKey('tab-docs'), icon: Icons.description_outlined, selectedIcon: Icons.description, label: app.t('nav.docs')),
+      AppNavDestination(key: const ValueKey('tab-where'), icon: Icons.place_outlined, selectedIcon: Icons.place, label: app.t('nav.where')),
+      AppNavDestination(key: const ValueKey('tab-tips'), icon: Icons.lightbulb_outline, selectedIcon: Icons.lightbulb, label: app.t('nav.tips')),
+      AppNavDestination(key: const ValueKey('tab-ads'), icon: Icons.campaign_outlined, selectedIcon: Icons.campaign, label: app.t('nav.ads')),
+    ];
+    void select(int i) => setState(() => _index = i);
+    // Узкое окно (телефон) — панель внизу; шире 600 (планшет, раскладушка, альбомная
+    // ориентация) — колонка слева, а содержимое не шире удобной для чтения ширины.
+    final compact = windowSizeClassFor(MediaQuery.sizeOf(context).width) == WindowSizeClass.compact;
     return SectionTheme(
       section: section,
       child: Builder(
-        builder: (context) => Scaffold(
-          body: Column(
+        builder: (context) {
+          final content = Column(
             children: [
               _HomeHeader(title: titles[_index], keyboard: keyboard),
               if (app.offline)
@@ -51,104 +63,33 @@ class _HomeShellState extends State<HomeShell> {
                   width: double.infinity,
                   color: Palette.demoSoft,
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Row(children: [
-                    const Icon(Icons.cloud_off, size: 20, color: Palette.demo),
-                    const SizedBox(width: 10),
-                    Expanded(child: Text(app.t('offline.notice'), style: const TextStyle(color: Palette.demo, fontWeight: FontWeight.w600))),
-                  ]),
+                  child: ReadableWidth(
+                    child: Row(children: [
+                      const Icon(Icons.cloud_off, size: 20, color: Palette.demo),
+                      const SizedBox(width: 10),
+                      Expanded(child: Text(app.t('offline.notice'), style: const TextStyle(color: Palette.demo, fontWeight: FontWeight.w600))),
+                    ]),
+                  ),
                 ),
-              Expanded(child: IndexedStack(index: _index, children: _tabs)),
+              Expanded(child: ReadableWidth(child: IndexedStack(index: _index, children: _tabs))),
             ],
-          ),
-          bottomNavigationBar: LayoutBuilder(builder: (context, constraints) {
-            final insets = MediaQuery.paddingOf(context);
-            final slot = (constraints.maxWidth - insets.left - insets.right) / 4;
-            final nav = NavigationBarTheme.of(context);
-            // В подсказке при долгом нажатии — слово без переноса.
-            final fit = fitNavLabels(context, [app.t('nav.docs'), app.t('nav.where'), app.t('nav.tips'), app.t('nav.ads')], slot);
-            return NavigationBarTheme(
-              data: nav.copyWith(labelTextStyle: WidgetStateProperty.resolveWith((s) => nav.labelTextStyle?.resolve(s)?.copyWith(fontSize: fit.size))),
-              child: NavigationBar(
-                selectedIndex: _index,
-                onDestinationSelected: (i) => setState(() => _index = i),
-                destinations: [
-                  NavigationDestination(key: const ValueKey('tab-docs'), icon: const Icon(Icons.description_outlined), selectedIcon: const Icon(Icons.description), label: fit.labels[0], tooltip: app.t('nav.docs')),
-                  NavigationDestination(key: const ValueKey('tab-where'), icon: const Icon(Icons.place_outlined), selectedIcon: const Icon(Icons.place), label: fit.labels[1], tooltip: app.t('nav.where')),
-                  NavigationDestination(key: const ValueKey('tab-tips'), icon: const Icon(Icons.lightbulb_outline), selectedIcon: const Icon(Icons.lightbulb), label: fit.labels[2], tooltip: app.t('nav.tips')),
-                  NavigationDestination(key: const ValueKey('tab-ads'), icon: const Icon(Icons.campaign_outlined), selectedIcon: const Icon(Icons.campaign), label: fit.labels[3], tooltip: app.t('nav.ads')),
-                ],
-              ),
+          );
+          if (compact) {
+            return Scaffold(
+              body: content,
+              bottomNavigationBar: AppBottomNav(destinations: destinations, selectedIndex: _index, onSelected: select),
             );
-          }),
-        ),
+          }
+          return Scaffold(
+            body: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              AppNavRail(destinations: destinations, selectedIndex: _index, onSelected: select),
+              Expanded(child: content),
+            ]),
+          );
+        },
       ),
     );
   }
-}
-
-/// Самый мелкий шрифт подписи нижней панели с учётом системного масштаба: как подписи вкладок iOS.
-const double _kMinNavLabel = 10;
-
-/// Подписи нижней панели так, чтобы ни одно слово не рвалось посередине.
-///
-/// Material увеличивает подписи вместе с системным размером шрифта (не больше чем в 1,3 раза) и
-/// не ограничивает число строк. При крупном шрифте «Объявления» не влезало в четверть экрана и
-/// рвалось на «Объявлени / я». Здесь общий для всех четырёх подписей размер уменьшается ровно
-/// настолько, чтобы каждое слово встало в свою колонку целиком, — но не мельче [_kMinNavLabel].
-/// Слово, которое не влезает и так (казахское «Хабарландырулар» на узком экране), делится
-/// по слогам с дефисом. Двухсловные подписи («Где оформить») по-прежнему идут в две строки.
-({double size, List<String> labels}) fitNavLabels(BuildContext context, List<String> labels, double slotWidth) {
-  final style = NavigationBarTheme.of(context).labelTextStyle?.resolve({WidgetState.selected}) ?? const TextStyle(fontSize: 12.5);
-  final scaler = MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 1.3); // как внутри NavigationBar
-  final dir = Directionality.of(context);
-  final room = slotWidth - 8; // немного воздуха между соседними подписями
-
-  double width(String s, double size) {
-    final tp = TextPainter(text: TextSpan(text: s, style: style.copyWith(fontSize: size)), textDirection: dir, textScaler: scaler, maxLines: 1)
-      ..layout();
-    final w = tp.width;
-    tp.dispose();
-    return w;
-  }
-
-  final words = {for (final l in labels) ...l.split(' ')};
-  var size = style.fontSize ?? 12.5;
-  while (words.any((w) => width(w, size) > room)) {
-    final next = size - 0.25;
-    if (scaler.scale(next) < _kMinNavLabel) break;
-    size = next;
-  }
-  String fitWord(String w) => width(w, size) <= room ? w : hyphenateNavWord(w, (part) => width(part, size) <= room);
-  return (size: size, labels: [for (final l in labels) l.split(' ').map(fitWord).join(' ')]);
-}
-
-const _vowels = 'аеёиоуыэюяәіөүұӯӣАЕЁИОУЫЭЮЯӘІӨҮҰӮӢaeiouAEIOU';
-
-/// Делит длинное слово дефисами на куски, каждый из которых (вместе с дефисом) проходит [fits].
-/// Место разрыва — как можно правее, по возможности после гласной перед согласной
-/// («Хабарланды-рулар»); в каждом куске не меньше трёх букв.
-String hyphenateNavWord(String word, bool Function(String part) fits) {
-  final out = <String>[];
-  var rest = word;
-  while (!fits(rest) && rest.length >= 6) {
-    int? best;
-    int? fallback;
-    for (var i = rest.length - 3; i >= 3; i--) {
-      if (!fits('${rest.substring(0, i)}-')) continue;
-      fallback ??= i;
-      if (_vowels.contains(rest[i - 1]) && !_vowels.contains(rest[i])) {
-        best = i;
-        break;
-      }
-    }
-    final cut = best ?? fallback;
-    if (cut == null) break;
-    out.add('${rest.substring(0, cut)}-');
-    rest = rest.substring(cut);
-  }
-  out.add(rest);
-  // Перенос строки допустим после дефиса — части встанут в разные строки сами.
-  return out.join();
 }
 
 /// Шапка: знак, язык, профиль и меню; город всегда на виду; крупный заголовок раздела.
@@ -174,7 +115,8 @@ class _HomeHeader extends StatelessWidget {
             Positioned.fill(child: SectionBackdrop(tone: tone)),
             Padding(
               padding: EdgeInsets.only(top: MediaQuery.paddingOf(context).top),
-              child: Column(
+              child: ReadableWidth(
+                child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
@@ -264,6 +206,7 @@ class _HomeHeader extends StatelessWidget {
                   ],
                   SizedBox(height: keyboard ? 40 : 44),
                 ],
+              ),
               ),
             ),
             const Positioned(left: 0, right: 0, bottom: 0, child: SheetCap(height: 30)),
